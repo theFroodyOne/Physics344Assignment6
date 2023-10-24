@@ -30,7 +30,6 @@ replay_pid*
 build
 
 .gitattributes
-gradlew
 gradlew.bat
 .idea
 gradle
