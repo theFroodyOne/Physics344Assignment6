@@ -49,6 +49,12 @@ jobs:
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
         arguments: test
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.3
+      with:
+        name: testReport
+        path: build/reports/tests
+        retention-days: 90
 
 
   coverage:
