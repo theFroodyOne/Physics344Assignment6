@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  * The original Nagel-Schreckenberg model on a straight stretch of road.
  *
@@ -103,8 +107,6 @@ public class SimpleModel {
                 try {
                     road[i + road[i].v] = road[i];
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("a: " + i + " " + road[i].v);
-                    System.out.println("b: " + road[i].timeOnRoad);
                     averageTimeOnRoad += road[i].timeOnRoad;
                     vehiclesPassed ++;
                 }
@@ -118,14 +120,13 @@ public class SimpleModel {
      * Run the simulation for a certain number of time steps
      * @param numSteps Number of steps to run the simulation for
      */
-    public void run(int numSteps){
+    public double run(int numSteps){
         for(int i = 0; i < numSteps; i ++){
             step();
             //for debugging
             //System.out.println(this);
         }
-        System.out.println("The average vehicle spent " + averageTimeOnRoad/vehiclesPassed + " time-steps on the road");
-        System.out.println("The \"vehicle current\" was " + (double)vehiclesPassed/timeStep);
+        return (double)averageTimeOnRoad/vehiclesPassed;
     }
 
     /**
@@ -147,8 +148,29 @@ public class SimpleModel {
         return ans.toString();
     }
 
+    /**
+     * Main method for generating and storing the data
+     * @param args Superfluous
+     */
     public static void main(String[] args){
-        SimpleModel sm = new SimpleModel(0.9, 0.9, 5, 100);
-        sm.run(100);
+        //todo observe timeOnRoad and current for different q, p, v and l
+        try {
+            FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase1.csv");
+            fw.write("q,p,v,l,timeOnRoad");
+            for (double q = 0.1; q <= 1; q += 0.1) {
+                for (double p = 0; p <= 0.9; p += 0.1) {
+                    for (int v = 3; v <= 12; v *= 2) {
+                        for (int l = 5; l <= 100; l *= 2) {
+                            fw.write(q + "," + p + "," + v + "," + l + ",");
+                            fw.write(new SimpleModel(q, p, v, l).run(1000000) + "");
+                            fw.write("\n");
+                        }
+                    }
+                }
+            }
+            fw.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 }
