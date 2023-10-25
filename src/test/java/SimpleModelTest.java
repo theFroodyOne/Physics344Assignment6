@@ -48,4 +48,35 @@ public class SimpleModelTest {
         }
         assertTrue(thrown);
     }
+
+    /**
+     * Test step() with a single vehicle accelerating on the roadway
+     */
+    @Test
+    public void testStep(){
+        SimpleModel sm = new SimpleModel(0.0, 0.0, 3, 10);
+        sm.road[0] = new Vehicle();
+        sm.step();
+        assertEquals(sm.road[1].v, 1);
+        sm.step();
+        assertEquals(sm.road[3].v, 2);
+        sm.step();
+        assertEquals(sm.road[6].v, 3);
+        sm.step();
+        assertEquals(sm.road[9].v, 3);
+    }
+
+    /**
+     * Test step() when there are multiple vehicles on the road potentially causing interference
+     */
+    @Test
+    public void testStepMultipleVehicles(){
+        SimpleModel sm = new SimpleModel(0.0, 0.0, 5, 10);
+        sm.road[2] = new Vehicle();
+        sm.road[0] = new Vehicle();
+        sm.road[0].v = 4;
+        sm.step();
+        assertEquals(sm.road[3].v, 1);
+        assertEquals(sm.road[1].v, 1);
+    }
 }

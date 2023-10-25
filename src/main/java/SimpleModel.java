@@ -1,5 +1,3 @@
-import javax.swing.*;
-
 /**
  * The original Nagel-Schreckenberg model on a straight stretch of road.
  *
@@ -70,7 +68,7 @@ public class SimpleModel {
     public void step(){
         //add vehicles at start point
         if(Math.random() < q && road[0] == null){
-            road[0] = new Vehicle(p, v);
+            road[0] = new Vehicle();
         }
         for(int i = l-1; i >= 0; i --) {
             if(road[i] == null){
@@ -85,9 +83,7 @@ public class SimpleModel {
             for(int j = 1; j <= road[i].v; j ++){
                 try {
                     if (road[i + j] != null) {
-                        road[i].v = j - 1;
-                        //fixme it ain't work
-                        System.out.println("Surely this happens from time to time, right?");
+                        road[i].v = j - 2;
                     }
                 }catch(ArrayIndexOutOfBoundsException e){
                     break;
@@ -102,7 +98,9 @@ public class SimpleModel {
                 try {
                     road[i + road[i].v] = road[i];
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    averageTimeOnRoad = (averageTimeOnRoad*vehiclesPassed + road[i].timeOnRoad)/(vehiclesPassed + 1);
+                    System.out.println(i + " " + road[i].v);
+                    System.out.println(road[i].timeOnRoad);
+                    averageTimeOnRoad += road[i].timeOnRoad;
                     vehiclesPassed ++;
                 }
                 road[i] = null;
@@ -118,9 +116,10 @@ public class SimpleModel {
     public void run(int numSteps){
         for(int i = 0; i < numSteps; i ++){
             step();
+            //for debugging
             System.out.println(this);
         }
-        System.out.println("The average vehicle spent " + averageTimeOnRoad + " time-steps on the road");
+        System.out.println("The average vehicle spent " + averageTimeOnRoad/vehiclesPassed + " time-steps on the road");
         System.out.println("The \"vehicle current\" was " + (double)vehiclesPassed/timeStep);
     }
 
@@ -144,7 +143,8 @@ public class SimpleModel {
     }
 
     public static void main(String[] args){
-        SimpleModel sm = new SimpleModel(0.99, 0.1, 5, 100);
-        sm.run(10);
+        //fixme somehow increasing p decreases time on road below what is physically possible???
+        SimpleModel sm = new SimpleModel(0.9, 0.9, 5, 100);
+        sm.run(100);
     }
 }
