@@ -30,17 +30,30 @@ For phase 1, the model stuck closely to the original proposal in (Nagel \& Schre
 
 \subsection*{Implementation}
 
-This model was implemented in Java (see src/main/java/SimpleModel.java) this creates a class that can be instantiated using the four independent variables in the model at this phase: $q$, $p$, $v$ and $l$. One instantiated, the simulation can be run for single time-step at a time (using \texttt{step()}) or for any number of time-steps (using \texttt{run(int numSteps)}, which returns the average number of time-steps a vehicle spent on the road in that run). To obtain some exploratory data, $1000$ simulations were run with values of $q \in {0.1, ... , 1}$, $p \in {0, ... , 0.9}$, $v \in {3, 6, 9, 12}$ and $l \in {5, 10, 20, 40, 80}$ for $10000$ time-steps, and the average number of time-steps a vehicle spends on the road (time on road, TOR) was recorded (data/phase1/data.csv). This data was then analysed using numpy and matplotlib in dataAnalysis.ipynb. The coefficient of determination $r^{2}$ was calculated between every independent variable and TOR. For more detailed information, the coefficient of determination was also calculated for selected subsets of the data (eg. effect of $v$ when $q$ is low vs. high)
+This model was implemented in Java (see src/main/java/SimpleModel.java) this creates a class that can be instantiated using the four independent variables in the model at this phase: $q$, $p$, $v$ and $l$. One instantiated, the simulation can be run for single time-step at a time (using \texttt{step()}) or for any number of time-steps (using \texttt{run(int numSteps)}, which returns the average number of time-steps a vehicle spent on the road in that run).
+
+To obtain some exploratory data, $1000$ simulations were run with values of $q \in {0.1, ... , 1}$, $p \in {0, ... , 0.9}$, $v \in {3, 6, 9, 12}$ and $l \in {5, 10, 20, 40, 80}$ for $10000$ time-steps, and the average number of time-steps a vehicle spends on the road (time on road, TOR) was recorded (data/phase1/data.csv). This data was then analysed using numpy and matplotlib in dataAnalysis.ipynb. The coefficient of determination $r^{2}$ was calculated between every independent variable and TOR. For more detailed information, the coefficient of determination was also calculated for selected subsets of the data (eg. effect of $v$ when $p$ is low).
 
 \subsection*{Results}
 
+%todo insert exact values for r^2
+Unsurprisingly, the largest $r^{2}$ value was observed for $l$, the length of the road in cells, at 40.40\%. $p$ also had a significant effect on TOR, at 27.73\%. Interestingly, the overall effect of $q$ and $v$ was quite low, both with $r^{2}$ less than 1\% (0.8840\% and 0.9128\% respectively). For $p \leq 0.2$, $v$ had a slightly larger effect at 7.239\%. Conversely, $q$ has slightly more effect at higher $p$, 2.824\% for $p \geq 0.8$.
+
 \subsection*{Discussion}
+
+\section*{Phase 2: Inflows and outflows via junctions}
+
+\subsection*{The model}
+
+In this phase, some of the variables had to be nailed down with real-world values to keep the size of the parameter space contained. The road segment in question is approximately 552 meters in length, which, using Nagel \& Schreckenberg's (1992) proposal for cell size (7.5m) this fixes the length of $l$ at 74. Estimating the average acceleration of vehicles on this road as $3m/s^{2}$, this means each time-step corresponds to approximately 2.5s in reality. Furthermore, this implies a maximum speed $v$ of 9 (27 m/s = 97.2 km/h--the true speed limit is 100km/h).
+
+To model the junctions themselves,
 
 \section*{Conclusion}
 
 \section*{References}
 
-%TODO fix alignment of references here
+%TODO fix alignment of references
 
 Nagel, K.; Schreckenberg, M. (1992). "A cellular automaton model for freeway traffic". \textit{Journal de Physique I} 2(12) doi:10.1051/jp1:1992277
 

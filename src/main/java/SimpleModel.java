@@ -155,7 +155,7 @@ public class SimpleModel {
         int runs = 1000;
         System.out.println("This will take more than an hour, please be patient");
         try {
-            FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase1/phase.csv");
+            FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase1/data.csv");
             fw.write("q,p,v,l,timeOnRoad\n");
             for (double q = 0.1; q <= 1; q += 0.1) {
                 for (double p = 0; p <= 0.9; p += 0.1) {
