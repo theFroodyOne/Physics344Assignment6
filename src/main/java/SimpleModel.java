@@ -153,10 +153,10 @@ public class SimpleModel {
      * @param args Superfluous
      */
     public static void main(String[] args){
-        //todo observe timeOnRoad and current for different q, p, v and l
+        //todo observe timeOnRoad for different q, p, v and l
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase1.csv");
-            fw.write("q,p,v,l,timeOnRoad");
+            fw.write("q,p,v,l,timeOnRoad\n");
             for (double q = 0.1; q <= 1; q += 0.1) {
                 for (double p = 0; p <= 0.9; p += 0.1) {
                     for (int v = 3; v <= 12; v *= 2) {
