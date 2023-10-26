@@ -33,7 +33,7 @@ jobs:
       env:
         RUNNER: ${{ toJson(runner) }}
     - name: nowWhatsGoingOnHereEh?
-      run: echo pwd
+      run: pwd
            ls
     - name: compile_report
       uses: xu-cheng/latex-action@v3
