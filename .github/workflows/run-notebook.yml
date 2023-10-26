@@ -32,8 +32,8 @@ jobs:
         path: ${{ RUNNER.temp }}/nb-runner
       env:
         RUNNER: ${{ toJson(runner) }}
-    - uses: xu-cheng/latex-action@v3
     - name: compile_report
+      uses: xu-cheng/latex-action@v3
       with:
         root_file: |
           Assignment6.tex
