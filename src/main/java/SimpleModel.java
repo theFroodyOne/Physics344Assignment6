@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -153,16 +152,21 @@ public class SimpleModel {
      * @param args Superfluous
      */
     public static void main(String[] args){
-        //todo observe timeOnRoad for different q, p, v and l
+        int runs = 1000;
+        System.out.println("This will take more than an hour, please be patient");
         try {
-            FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase1.csv");
+            FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase1/phase.csv");
             fw.write("q,p,v,l,timeOnRoad\n");
             for (double q = 0.1; q <= 1; q += 0.1) {
                 for (double p = 0; p <= 0.9; p += 0.1) {
-                    for (int v = 3; v <= 12; v *= 2) {
+                    for (int v = 3; v <= 12; v += 3) {
                         for (int l = 5; l <= 100; l *= 2) {
+                            double avg = 0;
                             fw.write(q + "," + p + "," + v + "," + l + ",");
-                            fw.write(new SimpleModel(q, p, v, l).run(1000000) + "");
+                            for(int i = 0; i < runs; i ++){
+                                avg += new SimpleModel(q, p, v, l).run(10000);
+                            }
+                            fw.write(avg/runs + "");
                             fw.write("\n");
                         }
                     }

@@ -15,6 +15,8 @@ The aim of this project was to adapt and expand the model proposed in (Nagel \& 
 
 This project proceeded in multiple phases. At first, the original Nagel-Schreckenberg model was only slightly adjusted to model a linear road segment. Phase 2 involved the addition of junctions along this road segment, while phase 3 considered the effects of traffic lights. In phase 4, the strategy of using Du Toit street to bypass traffic was evaluated, and phase 5 examined the effects that having multiple lanes has on traffic flow, as well as the effects of adding/removing lanes.
 
+All the code, data and resources used in this project is available on GitHub at: https://github.com/theFroodyOne/Physics344Assignment6
+
 \begin{figure}
 \includegraphics[scale = 0.75]{images/road.png}
 \caption{\label{fig} The roads in question. Red shading indicated the slowest traffic, whereas green indicates the fastest. Data shows typical traffic on a Monday evening at 5 pm. Image credit: (Google, 2023)}
@@ -27,6 +29,8 @@ This project proceeded in multiple phases. At first, the original Nagel-Schrecke
 For phase 1, the model stuck closely to the original proposal in (Nagel \& Schrekenberg, 1992), albeit with different boundary conditions that better reflect the reality of the road in question. In this model, a vehicle appears at the start(north) end of the road with a certain probability $q$ (provided the first cell is unoccupied). $p$ and $v$ have the same interpretation as in the original model, ie. the probability of a vehicle randomly decelerating and the top speed for all vehicles respectively. The final variable is the length of the road $l$, in cells. The main observable of interest is the number of time-steps a vehicle spends on the road, on average.
 
 \subsection*{Implementation}
+
+This model was implemented in Java (see src/main/java/SimpleModel.java) this creates a class that can be instantiated using the four independent variables in the model at this phase: $q$, $p$, $v$ and $l$. One instantiated, the simulation can be run for single time-step at a time (using \texttt{step()}) or for any number of time-steps (using \texttt{run(int numSteps)}, which returns the average number of time-steps a vehicle spent on the road in that run). To obtain some exploratory data, $1000$ simulations were run with various values of $q$, $p$, $v$ and $l$ for $10000$ time-steps, and the average number of time-steps a vehicle spends on the road (time on road, TOR) was recorded (data/phase1/data.csv). This data was then analysed using numpy and matplotlib in dataAnalysis.ipynb. The coefficient of determination $r^{2}$ was calculated between every independent variable and TOR.
 
 \subsection*{Results}
 
