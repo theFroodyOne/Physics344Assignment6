@@ -32,3 +32,14 @@ jobs:
         path: ${{ RUNNER.temp }}/nb-runner
       env:
         RUNNER: ${{ toJson(runner) }}
+    - uses: xu-cheng/latex-action@v3
+    - name: compile_report
+      with:
+        root_file: |
+          Assignment6.tex
+    - name: Upload PDF file
+      uses: actions/upload-artifact@v3
+      with:
+        name: PDF
+        path: Assignment6.pdf
+      
