@@ -32,15 +32,11 @@ jobs:
         path: ${{ RUNNER.temp }}/nb-runner
       env:
         RUNNER: ${{ toJson(runner) }}
-    - name: its_there...
-      run: ls
-    - name: but_its_not...
-      run: less Assignment6.tex
     - name: compile_report
       uses: xu-cheng/latex-action@v3
       with:
         root_file: |
-          ./Assignment6.tex
+          Assignment6.tex
     - name: Upload PDF file
       uses: actions/upload-artifact@v3
       with:
