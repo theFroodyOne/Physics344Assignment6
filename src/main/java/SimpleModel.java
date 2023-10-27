@@ -153,22 +153,20 @@ public class SimpleModel {
      */
     public static void main(String[] args){
         int runs = 1000;
-        System.out.println("This will take more than an hour, please be patient");
+        int l = 80;
         try {
-            FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase1/data.csv");
+            FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase1/data_fixed_l.csv");
             fw.write("q,p,v,l,timeOnRoad\n");
             for (double q = 0.1; q <= 1; q += 0.1) {
                 for (double p = 0; p <= 0.9; p += 0.1) {
                     for (int v = 3; v <= 12; v += 3) {
-                        for (int l = 5; l <= 100; l *= 2) {
-                            double avg = 0;
-                            fw.write(q + "," + p + "," + v + "," + l + ",");
-                            for(int i = 0; i < runs; i ++){
-                                avg += new SimpleModel(q, p, v, l).run(10000);
-                            }
-                            fw.write(avg/runs + "");
-                            fw.write("\n");
+                        double avg = 0;
+                        fw.write(q + "," + p + "," + v + "," + l + ",");
+                        for(int i = 0; i < runs; i ++){
+                            avg += new SimpleModel(q, p, v, l).run(10000);
                         }
+                        fw.write(avg/runs + "");
+                        fw.write("\n");
                     }
                 }
             }
