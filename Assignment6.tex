@@ -5,6 +5,8 @@
 \author{Zander Vermeulen}
 \date{13 November 2023}
 
+%TODO images out the wazoo
+
 \begin{document}
 
 \maketitle
@@ -38,9 +40,13 @@ To obtain some exploratory data, $1000$ simulations were run with values of $q \
 
 Unsurprisingly, the largest $r^{2}$ value was observed for $l$, the length of the road in cells, at 40.40\%. $p$ also had a significant effect on TOR, at 27.73\%. Interestingly, the overall effect of $q$ and $v$ was quite low, both with $r^{2}$ less than 1\% (0.8840\% and 0.9128\% respectively). For $p \leq 0.2$, $v$ had a slightly larger effect at 7.239\%. Conversely, $q$ has slightly more effect at higher $p$, 2.824\% for $p \geq 0.8$. Furthermore, when looking at low $p$ regimes, $r^{2}$ for $p$ itself is much lower, just 0.4989\% for $p \leq 0.2$ and 4.746\% for $p \leq 0.5$.
 
+Since $l$ has such a dominating effect, observations were also made with $l$ fixed at 80. $p$ then became the dominating variable (58.70\%), with $v$ having a dominating effect when $p \leq 0.2$ (74.03\%) and $q$ for $p \geq 0.8$ (73.57\%).
+
 \subsection*{Discussion}
 
-As may be expected, these results indicate that the biggest factor by far influencing TOR is the length of the road. The top speed allowed on the road had a moderate effect when $p$ was low, and $p$ itself only had a large effect when it was quite high ($p \geq 0.5$, unlikely to occur in reality). Somewhat surprisingly, the effect of $q$ was minimal, meaning that a busy road does not imply slow traffic in this model.
+As may be expected, these results indicate that the biggest factor by far influencing TOR is the length of the road. The top speed allowed on the road had a moderate effect when $p$ was low, and $p$ itself only had a large effect when it was quite high ($p \geq 0.5$, unlikely to occur in reality) (this is corroborated by the exponential-looking $p$-TOR curve, fig <TODO>). Somewhat surprisingly, the effect of $q$ was minimal, meaning that a busy road does not imply slow traffic in this model.
+
+Removing $l$ changed this picture significantly, revealing two possible regimes at low and high $p$ respectively. When $p$ was low, $v$ determined TOR to a high degree, since vehicles were likely to actually reach the top speed when $p$ was low. However, $v$ was mostly irrelevant at high $p$, since vehicles are slowing down randomly too often to ever reach the top speed. In this regime, $q$ largely determined TOR, with a higher inflow of vehicles slowing traffic significantly.
 
 \section*{Phase 2: Inflows and outflows via junctions}
 
