@@ -1,3 +1,6 @@
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class JunctionModel extends SimpleModel{
     /**
      * Top speed in this version of the model. See report for justification
@@ -60,22 +63,21 @@ public class JunctionModel extends SimpleModel{
         AlexanderOut = aOut;
     }
 
+    /**
+     * Update step() from SimpleModel to include vehicles entering/leaving at junctions
+     */
     @Override
     public void step(){
-        //add vehicles at start point
+        //add vehicles at start point & at junctions
         if(Math.random() < q && road[0] == null){
             road[0] = new Vehicle();
         }
-        //todo add vehicles at junctions
-        //incoming on Merriman
         if(Math.random() < MerrimanIn && road[MerrimanPos] == null){
             road[MerrimanPos] = new Vehicle();
         }
-        //incoming on George Blake
         if(Math.random() < GeorgeBlakeIn && road[GeorgeBlakePos] == null){
             road[GeorgeBlakePos] = new Vehicle();
         }
-        //incoming on Alexander
         if(Math.random() < AlexanderIn && road[AlexanderPos] == null){
             road[AlexanderPos] = new Vehicle();
         }
@@ -83,11 +85,15 @@ public class JunctionModel extends SimpleModel{
             if (road[i] == null) {
                 continue;
             }
-            //todo remove vehicles at junctions(% of those that will pass/reach junction at next time-step)
-            //find those that will reach junction in next time-step
-            //select those that will turn
-            //those that will turn slow down so as not to overshoot junction
-            //turners removed from road next time-step
+            //remove vehicles at junctions
+            if(road[i].destination.equals("Merriman") && i == MerrimanPos - 1){
+                road[i] = null;
+                continue;
+            }
+            if (road[i].destination == null && i <= MerrimanPos && i + road[i].v >= MerrimanPos && Math.random() < MerrimanOut){
+                road[i].destination = "Merriman";
+                road[i].v = MerrimanPos - i - 1;
+            }
             //acceleration
             road[i].timeOnRoad++;
             if (road[i].v < v) {
@@ -126,7 +132,19 @@ public class JunctionModel extends SimpleModel{
         timeStep ++;
     }
 
+    /**
+     * Main method for generating and storing the data
+     * @param args Superfluous
+     */
     public static void main(String[] args){
-        //
+        int runs = 1000;
+        int l = 80;
+        try {
+            FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase2/data.csv");
+            //todo write proper data
+            fw.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 }
