@@ -62,6 +62,71 @@ public class JunctionModel extends SimpleModel{
 
     @Override
     public void step(){
-        //todo add vehicles entering/exiting at junctions
+        //add vehicles at start point
+        if(Math.random() < q && road[0] == null){
+            road[0] = new Vehicle();
+        }
+        //todo add vehicles at junctions
+        //incoming on Merriman
+        if(Math.random() < MerrimanIn && road[MerrimanPos] == null){
+            road[MerrimanPos] = new Vehicle();
+        }
+        //incoming on George Blake
+        if(Math.random() < GeorgeBlakeIn && road[GeorgeBlakePos] == null){
+            road[GeorgeBlakePos] = new Vehicle();
+        }
+        //incoming on Alexander
+        if(Math.random() < AlexanderIn && road[AlexanderPos] == null){
+            road[AlexanderPos] = new Vehicle();
+        }
+        for(int i = 0; i < l; i ++) {
+            if (road[i] == null) {
+                continue;
+            }
+            //todo remove vehicles at junctions(% of those that will pass/reach junction at next time-step)
+            //find those that will reach junction in next time-step
+            //select those that will turn
+            //those that will turn slow down so as not to overshoot junction
+            //turners removed from road next time-step
+            //acceleration
+            road[i].timeOnRoad++;
+            if (road[i].v < v) {
+                road[i].v++;
+            }
+            //slowing down
+            for (int j = 1; j <= road[i].v; j++) {
+                try {
+                    if (road[i + j] != null) {
+                        road[i].v = j - 1;
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    break;
+                }
+            }
+            //randomisation
+            if (road[i].v > 0 && Math.random() < p) {
+                road[i].v--;
+            }
+        }
+        for(int i = l -1; i >= 0; i --){
+            if (road[i] == null) {
+                continue;
+            }
+            //motion
+            if(road[i].v != 0) {
+                try {
+                    road[i + road[i].v] = road[i];
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    averageTimeOnRoad += road[i].timeOnRoad;
+                    vehiclesPassed ++;
+                }
+                road[i] = null;
+            }
+        }
+        timeStep ++;
+    }
+
+    public static void main(String[] args){
+        //
     }
 }
