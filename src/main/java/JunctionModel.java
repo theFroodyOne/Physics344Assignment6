@@ -1,5 +1,6 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Objects;
 
 public class JunctionModel extends SimpleModel{
     /**
@@ -85,19 +86,31 @@ public class JunctionModel extends SimpleModel{
             if (road[i] == null) {
                 continue;
             }
-            //remove vehicles at junctions
-            if(road[i].destination.equals("Merriman") && i == MerrimanPos - 1){
+            System.out.println(road[i].destination);
+            //remove vehicle at junctions
+            if((Objects.equals(road[i].destination, "Merriman") && i == MerrimanPos - 1) ||
+                    (Objects.equals(road[i].destination, "George Blake") && i == GeorgeBlakePos - 1) ||
+                    (Objects.equals(road[i].destination, "Alexander") && i == AlexanderPos - 1)){
                 road[i] = null;
                 continue;
-            }
-            if (road[i].destination == null && i <= MerrimanPos && i + road[i].v >= MerrimanPos && Math.random() < MerrimanOut){
-                road[i].destination = "Merriman";
-                road[i].v = MerrimanPos - i - 1;
             }
             //acceleration
             road[i].timeOnRoad++;
             if (road[i].v < v) {
                 road[i].v++;
+            }
+            //decide if vehicle will turn off at junction
+            if (road[i].destination == null && i <= MerrimanPos && i + road[i].v >= MerrimanPos && Math.random() < MerrimanOut){
+                road[i].destination = "Merriman";
+                road[i].v = MerrimanPos - i - 1;
+            }
+            if (road[i].destination == null && i <= GeorgeBlakePos && i + road[i].v >= GeorgeBlakePos && Math.random() < GeorgeBlakeOut){
+                road[i].destination = "George Blake";
+                road[i].v = GeorgeBlakePos - i - 1;
+            }
+            if (road[i].destination == null && i <= AlexanderPos && i + road[i].v >= AlexanderPos && Math.random() < AlexanderOut){
+                road[i].destination = "Alexander";
+                road[i].v = AlexanderPos - i - 1;
             }
             //slowing down
             for (int j = 1; j <= road[i].v; j++) {
@@ -143,6 +156,8 @@ public class JunctionModel extends SimpleModel{
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase2/data.csv");
             //todo write proper data
             fw.close();
+            JunctionModel jm = new JunctionModel(1, 0, 0, 1, 0, 0, 0, 0);
+            jm.run(10);
         }catch(IOException e){
             e.printStackTrace();
         }
