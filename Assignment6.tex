@@ -81,14 +81,20 @@ In this phase, some of the variables had to be nailed down with real-world value
 
 To model the junctions themselves, six more variables were introduced, two for each of the three junctions, namely the probability of a vehicle leaving/joining the R44 at that junction. Vehicles join the R44 simply by appearing at the position of the junction. To be slightly more realistic, the leaving process is somewhat more complex. First, vehicles that will reach/pass a particular junction are identified, and a portion of them are randomly assigned to turn off at the junction according to the leaving probability. These then slow down to reach one cell before the junction by the end of this time-step. Finally, these vehicles "turn off" (ie. disappear from the model) during the next time-step.
 
+At this point, the model still had 8 variables, all of which could vary independently and continuously between 0 and 1 (since they are all probabilities of some kind). Limiting the range of some of these to values that are physically realistic was therefore necessary to investigate the behaviour effectively. Extrapolating from existing data on traffic flow collected in 2018 (Bredenhann, 2022), reasonable estimates can be made for many of these variables.
+
+\subsection*{Implementation}
+
 \section*{Conclusion}
 
 \section*{References}
 
 %TODO fix alignment of references
 
-Nagel, K.; Schreckenberg, M. (1992). "A cellular automaton model for freeway traffic". \textit{Journal de Physique I} 2(12) doi:10.1051/jp1:1992277
+Bredenhann, C. (2022). \textit{Stellenbosch Municipality Roads Master Plan: 2022 update}.
 
 Google. (2023). Retrieved 25 October 2023 from https://www.google.com/maps/@-33.9354554,18.8545061,17z/data=!5m1!1e1?entry=ttu
+
+Nagel, K.; Schreckenberg, M. (1992). "A cellular automaton model for freeway traffic". \textit{Journal de Physique I} 2(12) doi:10.1051/jp1:1992277
 
 \end{document}

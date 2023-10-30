@@ -2,6 +2,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
 
+//TODO replace probabilistic flows with queue and flow rate
+
 public class JunctionModel extends SimpleModel{
     /**
      * Top speed in this version of the model. See report for justification
@@ -86,7 +88,6 @@ public class JunctionModel extends SimpleModel{
             if (road[i] == null) {
                 continue;
             }
-            System.out.println(road[i].destination);
             //remove vehicle at junctions
             if((Objects.equals(road[i].destination, "Merriman") && i == MerrimanPos - 1) ||
                     (Objects.equals(road[i].destination, "George Blake") && i == GeorgeBlakePos - 1) ||
@@ -151,13 +152,12 @@ public class JunctionModel extends SimpleModel{
      */
     public static void main(String[] args){
         int runs = 1000;
-        int l = 80;
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase2/data.csv");
-            //todo write proper data
-            fw.close();
+            //todo codify assumptions and generate some data
             JunctionModel jm = new JunctionModel(1, 0, 0, 1, 0, 0, 0, 0);
             jm.run(10);
+            fw.close();
         }catch(IOException e){
             e.printStackTrace();
         }
