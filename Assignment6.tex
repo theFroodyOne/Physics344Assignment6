@@ -83,6 +83,7 @@ To model the junctions themselves, six more variables were introduced, two for e
 
 At this point, the model still had 8 variables, all of which could vary independently and continuously between 0 and 1 (since they are all probabilities of some kind). Limiting the range of some of these to values that are physically realistic was therefore necessary to investigate the behaviour effectively. Extrapolating from existing data on traffic flow collected in 2018 (Bredenhann, 2022), reasonable estimates can be made for many of these variables (table 1 below).
 
+\begin{center}
 \begin{tabular}{ |c|c| }
  \hline
  {\large Junction & Direction & Probability} \\
@@ -92,6 +93,7 @@ At this point, the model still had 8 variables, all of which could vary independ
  Merriman & Outgoing & 0.3139 \\
  \hline
 \end{tabular}
+\end{center}
 
 \subsection*{Implementation}
 
