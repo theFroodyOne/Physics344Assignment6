@@ -29,13 +29,13 @@ All the code, data and resources used in this project is available on GitHub at:
 
 \subsection*{The model}
 
-For phase 1, the model stuck closely to the original proposal in (Nagel \& Schrekenberg, 1992), albeit with different boundary conditions that better reflect the reality of the road in question. In this model, a vehicle appears at the start(north) end of the road with a certain probability $q$ (provided the first cell is unoccupied). $p$ and $v$ have the same interpretation as in the original model, ie. the probability of a vehicle randomly decelerating and the top speed for all vehicles respectively. The final variable is the length of the road $l$, in cells. The main observable of interest is the number of time-steps a vehicle spends on the road, on average.
+For phase 1, the model stuck closely to the original proposal in (Nagel \& Schrekenberg, 1992), albeit with different boundary conditions that better reflect the reality of the road in question. In this model, a vehicle appears at the start(north) end of the road with a certain probability $q$ (provided the first cell is unoccupied). $p$ and $v$ have the same interpretation as in the original model, i.e. the probability of a vehicle randomly decelerating and the top speed for all vehicles respectively. The final variable is the length of the road $l$, in cells. The main observable of interest is the number of time-steps a vehicle spends on the road, on average.
 
 \subsection*{Implementation}
 
 This model was implemented in Java (see src/main/java/SimpleModel.java) this creates a class that can be instantiated using the four independent variables in the model at this phase: $q$, $p$, $v$ and $l$. One instantiated, the simulation can be run for single time-step at a time (using \texttt{step()}) or for any number of time-steps (using \texttt{run(int numSteps)}, which returns the average number of time-steps a vehicle spent on the road in that run).
 
-To obtain some exploratory data, $1000$ simulations were run with values of $q \in {0.1, ... , 1}$, $p \in {0, ... , 0.9}$, $v \in {3, 6, 9, 12}$ and $l \in {5, 10, 20, 40, 80}$ for $10000$ time-steps, and the average number of time-steps a vehicle spends on the road (time on road, TOR) was recorded (data/phase1/data.csv). This data was then analysed using numpy and matplotlib in dataAnalysis.ipynb. The coefficient of determination $r^{2}$ was calculated between every independent variable and TOR. For more detailed information, the coefficient of determination was also calculated for selected subsets of the data (eg. effect of $v$ when $p$ is low).
+To obtain some exploratory data, $1000$ simulations were run with values of $q \in {0.1, ... , 1}$, $p \in {0, ... , 0.9}$, $v \in {3, 6, 9, 12}$ and $l \in {5, 10, 20, 40, 80}$ for $10000$ time-steps, and the average number of time-steps a vehicle spends on the road (time on road, TOR) was recorded (data/phase1/data.csv). This data was then analysed using numpy and matplotlib in dataAnalysis.ipynb. The coefficient of determination $r^{2}$ was calculated between every independent variable and TOR. For more detailed information, the coefficient of determination was also calculated for selected subsets of the data (e.g. effect of $v$ when $p$ is low).
 
 \subsection*{Results}
 
@@ -56,7 +56,7 @@ Since $l$ has such a dominating effect, observations were also made with $l$ fix
 \rotatebox{90}{{\hspace*{3cm}{\large TOR}}}
 \includegraphics[scale = 0.55, left]{./data/phase1/v_vs_timeOnRoad_l=80_lowp.png}
 \vspace*{0.1cm}\hspace*{4.5cm}{\large $p$}
-\caption{\label{fig} Looking at low $p$ regimes, the effect of $v$ predominates, ie. increasing $v$ reduces TOR significantly, albeit with diminishing returns.}
+\caption{\label{fig} Looking at low $p$ regimes, the effect of $v$ predominates, i.e. increasing $v$ reduces TOR significantly, albeit with diminishing returns.}
 \end{figure}
 
 \begin{figure}
@@ -64,7 +64,7 @@ Since $l$ has such a dominating effect, observations were also made with $l$ fix
 \rotatebox{90}{{\hspace*{3cm}{\large TOR}}}
 \includegraphics[scale = 0.55, left]{./data/phase1/q_vs_timeOnRoad_l=80_highp.png}
 \vspace*{0.1cm}\hspace*{4.5cm}{\large $p$}
-\caption{\label{fig} Looking at high $p$ regimes, the effect of $q$ predominates, ie. more cars on the road slows things down regardless of top speeds.}
+\caption{\label{fig} Looking at high $p$ regimes, the effect of $q$ predominates, i.e. more cars on the road slows things down regardless of top speeds.}
 \end{figure}
 
 \subsection*{Discussion}
@@ -79,9 +79,19 @@ Removing $l$ changed this picture significantly, revealing two possible regimes 
 
 In this phase, some of the variables had to be nailed down with real-world values to keep the size of the parameter space contained. The road segment in question is approximately 552 meters in length, which, using Nagel \& Schreckenberg's (1992) proposal for cell size (7.5m) this fixes the length of $l$ at 74. Estimating the average acceleration of vehicles on this road as $3m/s^{2}$, this means each time-step corresponds to approximately 2.5s in reality. Furthermore, this implies a maximum speed $v$ of 9 (27 m/s = 97.2 km/h--the true speed limit is 100km/h).
 
-To model the junctions themselves, six more variables were introduced, two for each of the three junctions, namely the probability of a vehicle leaving/joining the R44 at that junction. Vehicles join the R44 simply by appearing at the position of the junction. To be slightly more realistic, the leaving process is somewhat more complex. First, vehicles that will reach/pass a particular junction are identified, and a portion of them are randomly assigned to turn off at the junction according to the leaving probability. These then slow down to reach one cell before the junction by the end of this time-step. Finally, these vehicles "turn off" (ie. disappear from the model) during the next time-step.
+To model the junctions themselves, six more variables were introduced, two for each of the three junctions, namely the probability of a vehicle leaving/joining the R44 at that junction. Vehicles join the R44 simply by appearing at the position of the junction. To be slightly more realistic, the leaving process is somewhat more complex. First, vehicles that will reach/pass a particular junction are identified, and a portion of them are randomly assigned to turn off at the junction according to the leaving probability. These then slow down to reach one cell before the junction by the end of this time-step. Finally, these vehicles "turn off" (i.e. disappear from the model) during the next time-step.
 
-At this point, the model still had 8 variables, all of which could vary independently and continuously between 0 and 1 (since they are all probabilities of some kind). Limiting the range of some of these to values that are physically realistic was therefore necessary to investigate the behaviour effectively. Extrapolating from existing data on traffic flow collected in 2018 (Bredenhann, 2022), reasonable estimates can be made for many of these variables.
+At this point, the model still had 8 variables, all of which could vary independently and continuously between 0 and 1 (since they are all probabilities of some kind). Limiting the range of some of these to values that are physically realistic was therefore necessary to investigate the behaviour effectively. Extrapolating from existing data on traffic flow collected in 2018 (Bredenhann, 2022), reasonable estimates can be made for many of these variables (table 1 below).
+
+\begin{tabular}{ |c|c| }
+ \hline
+ {\large Junction & Direction & Probability} \\
+ \hline
+ R44 (i.e. already on road) & Incoming & 0.7736\\
+ Merriman & Incoming & 0.7132 \\
+ Merriman & Outgoing & 0.3139 \\
+ \hline
+\end{tabular}
 
 \subsection*{Implementation}
 
