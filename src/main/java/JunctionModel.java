@@ -2,6 +2,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
 
+//TODO add "traffic lights" at junctions for phase 3
+//may require queues for built up cars
+
 public class JunctionModel extends SimpleModel{
     /**
      * Top speed in this version of the model. See report for justification
