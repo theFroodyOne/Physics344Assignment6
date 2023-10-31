@@ -2,8 +2,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
 
-//TODO replace probabilistic flows with queue and flow rate
-
 public class JunctionModel extends SimpleModel{
     /**
      * Top speed in this version of the model. See report for justification
@@ -49,6 +47,11 @@ public class JunctionModel extends SimpleModel{
      * Probability of a vehicle exiting via Alexander Street
      */
     double AlexanderOut;
+    /**
+     * Average speed maintained by vehicles on the road
+     */
+    double averageSpeed;
+    int averageSpeedReadings;
 
     /**
      * Constructor. Sets up all the fields with their necessary values
@@ -64,6 +67,8 @@ public class JunctionModel extends SimpleModel{
         GeorgeBlakeOut = gOut;
         AlexanderIn = aIn;
         AlexanderOut = aOut;
+        averageSpeed = 0;
+        averageSpeedReadings = 0;
     }
 
     /**
@@ -92,24 +97,24 @@ public class JunctionModel extends SimpleModel{
             if((Objects.equals(road[i].destination, "Merriman") && i == MerrimanPos - 1) ||
                     (Objects.equals(road[i].destination, "George Blake") && i == GeorgeBlakePos - 1) ||
                     (Objects.equals(road[i].destination, "Alexander") && i == AlexanderPos - 1)){
+                vehiclesPassed ++;
                 road[i] = null;
                 continue;
             }
             //acceleration
-            road[i].timeOnRoad++;
             if (road[i].v < v) {
                 road[i].v++;
             }
             //decide if vehicle will turn off at junction
-            if (road[i].destination == null && i <= MerrimanPos && i + road[i].v >= MerrimanPos && Math.random() < MerrimanOut){
+            if (road[i].destination == null && i < MerrimanPos && i + road[i].v >= MerrimanPos && Math.random() < MerrimanOut){
                 road[i].destination = "Merriman";
                 road[i].v = MerrimanPos - i - 1;
             }
-            if (road[i].destination == null && i <= GeorgeBlakePos && i + road[i].v >= GeorgeBlakePos && Math.random() < GeorgeBlakeOut){
+            if (road[i].destination == null && i < GeorgeBlakePos && i + road[i].v >= GeorgeBlakePos && Math.random() < GeorgeBlakeOut){
                 road[i].destination = "George Blake";
                 road[i].v = GeorgeBlakePos - i - 1;
             }
-            if (road[i].destination == null && i <= AlexanderPos && i + road[i].v >= AlexanderPos && Math.random() < AlexanderOut){
+            if (road[i].destination == null && i < AlexanderPos && i + road[i].v >= AlexanderPos && Math.random() < AlexanderOut){
                 road[i].destination = "Alexander";
                 road[i].v = AlexanderPos - i - 1;
             }
@@ -132,12 +137,14 @@ public class JunctionModel extends SimpleModel{
             if (road[i] == null) {
                 continue;
             }
+            //System.out.println(road[i].v);
+            averageSpeed += road[i].v;
+            averageSpeedReadings ++;
             //motion
             if(road[i].v != 0) {
                 try {
                     road[i + road[i].v] = road[i];
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    averageTimeOnRoad += road[i].timeOnRoad;
                     vehiclesPassed ++;
                 }
                 road[i] = null;
@@ -146,16 +153,31 @@ public class JunctionModel extends SimpleModel{
         timeStep ++;
     }
 
+    @Override
+    /**
+     * Run the simulation for a certain number of time steps
+     * @param numSteps Number of steps to run the simulation for
+     */
+    public double run(int numSteps){
+        for(int i = 0; i < numSteps; i ++){
+            step();
+            //for debugging
+            //System.out.println(this);
+        }
+        //System.out.println(averageSpeed);
+        return averageSpeed/averageSpeedReadings;
+    }
+
     /**
      * Main method for generating and storing the data
      * @param args Superfluous
      */
     public static void main(String[] args){
-        int runs = 10;
+        int runs = 1000;
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase2/data.csv");
-            fw.write("p, timeOnRoa\n");
-            for(double p = 0.1; p < 0.2; p += 0.01) {
+            fw.write("p, v\n");
+            for(double p = 0; p < 0.5; p += 0.01) {
                 double avg = 0;
                 fw.write(p + ",");
                 for (int i = 0; i < runs; i++) {

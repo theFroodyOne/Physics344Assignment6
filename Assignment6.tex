@@ -81,7 +81,7 @@ In this phase, some of the variables had to be nailed down with real-world value
 
 To model the junctions themselves, six more variables were introduced, two for each of the three junctions, namely the probability of a vehicle leaving/joining the R44 at that junction. Vehicles join the R44 simply by appearing at the position of the junction. To be slightly more realistic, the leaving process is somewhat more complex. First, vehicles that will reach/pass a particular junction are identified, and a portion of them are randomly assigned to turn off at the junction according to the leaving probability. These then slow down to reach one cell before the junction by the end of this time-step. Finally, these vehicles "turn off" (i.e. disappear from the model) during the next time-step.
 
-At this point, the model still had 8 variables, all of which could vary independently and continuously between 0 and 1 (since they are all probabilities of some kind). Limiting the range of some of these to values that are physically realistic was therefore necessary to investigate the behaviour effectively. Extrapolating from existing data on traffic flow collected in 2018 (Bredenhann, 2022), reasonable estimates can be made for many of these variables (table 1 below).
+At this point, the model still had 8 variables, all of which could vary independently and continuously between 0 and 1 (since they are all probabilities of some kind). Limiting the range of some of these to values that are physically realistic was therefore necessary to investigate the behaviour effectively. Extrapolating from existing data on traffic flow collected in 2018 (Bredenhann, 2022), reasonable estimates can be made for many of these variables (see table below).
 
 \begin{center}
 \begin{tabular}{ |c|c|c| }
@@ -99,9 +99,15 @@ At this point, the model still had 8 variables, all of which could vary independ
 \end{tabular}
 \end{center}
 
-Data for Alexander Street was not available in (Bredenhann, 2022), so it was assumed to have similar flows to Merriman Avenue. $p \in [0.1, 0.2]$ was selected as a reasonable range.
+Data for Alexander Street was not available in (Bredenhann, 2022), so it was assumed to have similar flows to Merriman Avenue. $[0, 0.5)$ was selected as a reasonable range for $p$.
+
+Finally, using TOR as a metric in this phase would be inappropriate since vehicles coming in from different junctions have different lengths of road to cover, and lumping them all together would not yield any insightful results. Therefore, the average speed would be the main metric of interest, from which TOR from each junction can be estimated.
 
 \subsection*{Implementation}
+
+This model was implemented in the \texttt{JunctionModel} class, which is a subclass of \texttt{SimpleModel} used for phase 1. Fields were added for the inflow and outflow probabilities as indictated in the table above, with $v$ and $l$ now fixed to correspond to their real-world values. Furthermore, the \texttt{step()} function had to be updated to mark vehicles that will leave the road at the next junction (which necessitated a \texttt{destination} field to be added to the \texttt{vehicle} class) and to remove these when they reached the junction in question. \texttt{run(int numSteps)} was also updated to record average speeds instead of TOR.
+
+\subsection*{Results}
 
 \section*{Conclusion}
 
