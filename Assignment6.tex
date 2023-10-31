@@ -22,7 +22,7 @@ All the code, data and resources used in this project is available on GitHub at:
 
 \begin{figure}
 \includegraphics[scale = 0.75]{images/road.png}
-\caption{\label{fig} The roads in question. Red shading indicated the slowest traffic, whereas green indicates the fastest. Data shows typical traffic on a Monday evening at 5 pm. Image credit: (Google, 2023)}
+\caption{\label{fig} The roads in question. Red shading indicated the slowest traffic, whereas green indicates the fastest. Data shows typical traffic on a Monday evening at 5 pm. Image credit: (Google, 2023a)}
 \end{figure}
 
 \section*{Phase 1: Simple model on a linear road segment}
@@ -107,7 +107,33 @@ Finally, using TOR as a metric in this phase would be inappropriate since vehicl
 
 This model was implemented in the \texttt{JunctionModel} class, which is a subclass of \texttt{SimpleModel} used for phase 1. Fields were added for the inflow and outflow probabilities as indictated in the table above, with $v$ and $l$ now fixed to correspond to their real-world values. Furthermore, the \texttt{step()} function had to be updated to mark vehicles that will leave the road at the next junction (which necessitated a \texttt{destination} field to be added to the \texttt{vehicle} class) and to remove these when they reached the junction in question. \texttt{run(int numSteps)} was also updated to record average speeds instead of TOR.
 
+Again, 1000 simulations were run for 10000 time-steps each for each $p \in {0, 0.01, ... , 0.49}$ and the average speed recorded in data/phase2/data.csv.
+
 \subsection*{Results}
+
+Average speeds were quite low, reflecting real-world traffic conditions. Higher values of $p$ also supress speeds, as expected (fig. 5). At $p=0$, the ideal case, $v$ was already just 0.6474, roughly equivalent to 7km/h. The worst case that was examined, $p=0.49$, had an average speed of just 0.4700, or about 5km/h. Some extrapolated travel times are shown in the table below.
+
+\begin{center}
+\begin{tabular}{ |c|c|c|c| }
+ \hline
+ Starting point & Destination & Best case travel time & Worst case travel time \\
+ \hline
+ R44 (i.e. already on road) & R310 & 4m44s & 6m31s \\
+ Merriman & R310 & 4m26s & 6m7s \\
+ George Blake & Alexander & 2m0s & 2m45s \\
+ \hline
+\end{tabular}
+\end{center}
+
+The travel times for the whole route (R44 to R310) fall within the range Google maps predicts at 5pm on a Tuesday evening (ie. eveneing peak hours) which is "typically 3-7 minutes" (Google 2023b)
+
+\begin{figure}
+\textbf{\large Average speed as a function of $p$}\par\medskip
+\rotatebox{90}{{\hspace*{3cm}{\large \langle v \rangle}}}
+\includegraphics[scale = 0.55, left]{./data/phase2/v_vs_p.png}
+\vspace*{0.1cm}\hspace*{4.5cm}{\large $p$}
+\caption{\label{fig} Average speeds are low overall due to high congestion, but are even lower at high $p$.}
+\end{figure}
 
 \section*{Conclusion}
 
@@ -117,7 +143,9 @@ This model was implemented in the \texttt{JunctionModel} class, which is a subcl
 
 Bredenhann, C. (2022). \textit{Stellenbosch Municipality Roads Master Plan: 2022 update}.
 
-Google. (2023). Retrieved 25 October 2023 from https://www.google.com/maps/@-33.9354554,18.8545061,17z/data=!5m1!1e1?entry=ttu
+Google. (2023a). Retrieved 25 October 2023 from https://www.google.com/maps/@-33.9354554,18.8545061,17z/data=!5m1!1e1?entry=ttu
+
+Google. (2023b). Retrieved 31 October 2023 from https://www.google.com/maps/dir/-33.9325783,18.8529169/-33.9371228,18.8515087/@-33.9349965,18.8496809,17z/data=!4m6!4m5!2m3!6e0!7e2!8j1698771600!3e0?entry=ttu
 
 Nagel, K.; Schreckenberg, M. (1992). "A cellular automaton model for freeway traffic". \textit{Journal de Physique I} 2(12) doi:10.1051/jp1:1992277
 
