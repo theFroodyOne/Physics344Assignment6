@@ -123,7 +123,7 @@ public class SimpleModel {
         for(int i = 0; i < numSteps; i ++){
             step();
             //for debugging
-            System.out.println(this);
+            //System.out.println(this);
         }
         return (double)averageTimeOnRoad/vehiclesPassed;
     }

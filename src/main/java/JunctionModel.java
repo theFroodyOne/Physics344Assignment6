@@ -151,12 +151,19 @@ public class JunctionModel extends SimpleModel{
      * @param args Superfluous
      */
     public static void main(String[] args){
-        int runs = 1000;
+        int runs = 10;
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase2/data.csv");
-            //todo codify assumptions and generate some data
-            JunctionModel jm = new JunctionModel(1, 0, 0, 1, 0, 0, 0, 0);
-            jm.run(10);
+            fw.write("p, timeOnRoa\n");
+            for(double p = 0.1; p < 0.2; p += 0.01) {
+                double avg = 0;
+                fw.write(p + ",");
+                for (int i = 0; i < runs; i++) {
+                    avg += new JunctionModel(0.7736, p, 0.7132, 0.3139, 0.3938, 0.4007, 0.7132, 0.3139).run(10000);
+                }
+                fw.write(avg / runs + "");
+                fw.write("\n");
+            }
             fw.close();
         }catch(IOException e){
             e.printStackTrace();
