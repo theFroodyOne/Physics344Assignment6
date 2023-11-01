@@ -156,7 +156,7 @@ public class TrafficLightModel extends JunctionModel{
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase3/data.csv");
             fw.write("p, t, <v>\n");
-            for(int t = 12; t < 60; t += 4) {
+            for(int t = 12; t < 120; t += 4) {
                 for (double p = 0.0; p < 0.6; p += 0.1) {
                     double avg = 0;
                     fw.write(p + ",");
