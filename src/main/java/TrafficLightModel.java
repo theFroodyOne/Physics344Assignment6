@@ -1,8 +1,10 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class TrafficLightModel extends JunctionModel{
-    private static final int QUEUE_CAP = 100;
+    private static final int QUEUE_CAP = 10000;
     /**
      * Queue for vehicles waiting to enter via Merriman Avenue
      */
@@ -55,10 +57,18 @@ public class TrafficLightModel extends JunctionModel{
         if(Math.random() < GeorgeBlakeIn){
             GeorgeBlakeQueue.add(new Vehicle());
         }
-        if(Math.random() < MerrimanIn){
+        if(Math.random() < AlexanderIn){
             AlexanderQueue.add(new Vehicle());
         }
-        //TODO pull vehicles in from queue when lights are red
+        if(!MerrimanQueue.isEmpty() && !MerrimanLight.check()){
+            road[MerrimanPos] = new Vehicle();
+        }
+        if(!GeorgeBlakeQueue.isEmpty() && !GeorgeBlakeLight.check()){
+            road[GeorgeBlakePos] = new Vehicle();
+        }
+        if(!AlexanderQueue.isEmpty() && !AlexanderLight.check()){
+            road[AlexanderPos] = new Vehicle();
+        }
         for(int i = 0; i < l; i ++) {
             if (road[i] == null) {
                 continue;
@@ -88,7 +98,17 @@ public class TrafficLightModel extends JunctionModel{
                 road[i].destination = "Alexander";
                 road[i].v = AlexanderPos - i - 1;
             }
-            //slowing down
+            //slowing down for traffic lights
+            if(i < MerrimanPos && i + road[i].v >= MerrimanPos && !MerrimanLight.check()){
+                road[i].v = MerrimanPos - i - 1;
+            }
+            if(i < GeorgeBlakePos && i + road[i].v >= GeorgeBlakePos && !GeorgeBlakeLight.check()){
+                road[i].v = GeorgeBlakePos - i - 1;
+            }
+            if(i < AlexanderPos && i + road[i].v >= AlexanderPos && !AlexanderLight.check()){
+                road[i].v = AlexanderPos - i - 1;
+            }
+            //slowing down for other vehicles
             for (int j = 1; j <= road[i].v; j++) {
                 try {
                     if (road[i + j] != null) {
@@ -111,7 +131,6 @@ public class TrafficLightModel extends JunctionModel{
             averageSpeed += road[i].v;
             averageSpeedReadings ++;
             //motion
-            //TODO stop motion when traffic lights are not green
             if(road[i].v != 0) {
                 try {
                     road[i + road[i].v] = road[i];
@@ -124,7 +143,30 @@ public class TrafficLightModel extends JunctionModel{
         timeStep ++;
     }
 
+    /**
+     * Main method for generating and storing the data
+     * @param args Superfluous
+     */
     public static void main(String[] args){
-        //TODO
+        int runs = 1;
+        try {
+            FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase3/data.csv");
+            fw.write("p, t, <v>\n");
+            for(int t = 1; t < 10; t ++) {
+                for (double p = 0; p < 0.5; p += 0.01) {
+                    double avg = 0;
+                    fw.write(p + ",");
+                    fw.write(t + ",");
+                    for (int i = 0; i < runs; i++) {
+                        avg += new TrafficLightModel(0.7736, p, 0.7132, 0.3139, 0.3938, 0.4007, 0.7132, 0.3139, t).run(10000);
+                    }
+                    fw.write(avg / runs + "");
+                    fw.write("\n");
+                }
+            }
+            fw.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 }
