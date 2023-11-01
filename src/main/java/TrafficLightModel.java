@@ -148,11 +148,11 @@ public class TrafficLightModel extends JunctionModel{
      * @param args Superfluous
      */
     public static void main(String[] args){
-        int runs = 1;
+        int runs = 10;
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase3/data.csv");
             fw.write("p, t, <v>\n");
-            for(int t = 1; t < 10; t ++) {
+            for(int t = 12; t < 48; t += 4) {
                 for (double p = 0; p < 0.5; p += 0.01) {
                     double avg = 0;
                     fw.write(p + ",");
