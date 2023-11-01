@@ -29,6 +29,10 @@ public class TrafficLightModel extends JunctionModel{
      * Traffic light controlling inflows from Alexander Street
      */
     TrafficLight AlexanderLight;
+    double Mq;
+    double Gq;
+    double Aq;
+
     /**
      * Constructor. Sets up all the fields with their necessary values
      *
@@ -43,6 +47,9 @@ public class TrafficLightModel extends JunctionModel{
         MerrimanLight = new TrafficLight(lightTimes);
         GeorgeBlakeLight = new TrafficLight(lightTimes);
         AlexanderLight = new TrafficLight(lightTimes);
+        Mq = 0;
+        Gq = 0;
+        Aq = 0;
     }
 
     @Override
@@ -61,13 +68,13 @@ public class TrafficLightModel extends JunctionModel{
             AlexanderQueue.add(new Vehicle());
         }
         if(!MerrimanQueue.isEmpty() && !MerrimanLight.check()){
-            road[MerrimanPos] = new Vehicle();
+            road[MerrimanPos] = MerrimanQueue.poll();
         }
         if(!GeorgeBlakeQueue.isEmpty() && !GeorgeBlakeLight.check()){
-            road[GeorgeBlakePos] = new Vehicle();
+            road[GeorgeBlakePos] = GeorgeBlakeQueue.poll();
         }
         if(!AlexanderQueue.isEmpty() && !AlexanderLight.check()){
-            road[AlexanderPos] = new Vehicle();
+            road[AlexanderPos] = AlexanderQueue.poll();
         }
         for(int i = 0; i < l; i ++) {
             if (road[i] == null) {
@@ -140,6 +147,9 @@ public class TrafficLightModel extends JunctionModel{
                 road[i] = null;
             }
         }
+        Mq += MerrimanQueue.size();
+        Gq += GeorgeBlakeQueue.size();
+        Aq += AlexanderQueue.size();
         timeStep ++;
         MerrimanLight.incrementTime();
         GeorgeBlakeLight.incrementTime();
@@ -153,18 +163,27 @@ public class TrafficLightModel extends JunctionModel{
     public static void main(String[] args){
         //TODO run for 1000 for better data
         int runs = 100;
+        int steps = 1440;
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase3/data.csv");
-            fw.write("p, t, <v>\n");
-            for(int t = 12; t < 120; t += 4) {
+            fw.write("p, t, <v>, Mq, Gq, Aq\n");
+            for(int t = 1; t < 120; t ++){
                 for (double p = 0.0; p < 0.6; p += 0.1) {
+                    double Mq = 0, Gq = 0, Aq = 0;
                     double avg = 0;
                     fw.write(p + ",");
                     fw.write(t + ",");
                     for (int i = 0; i < runs; i++) {
-                        avg += new TrafficLightModel(0.7736, p, 0.7132, 0.3139, 0.3938, 0.4007, 0.7132, 0.3139, t).run(10000);
+                        TrafficLightModel tlm = new TrafficLightModel(0.7736, p, 0.7132, 0.3139, 0.3938, 0.4007, 0.7132, 0.3139, t);
+                        avg += tlm.run(steps);
+                        Mq += tlm.Mq;
+                        Gq += tlm.Gq;
+                        Aq += tlm.Aq;
                     }
-                    fw.write(avg / runs + "");
+                    fw.write(avg / runs + ",");
+                    fw.write(Mq/(steps*runs) + ",");
+                    fw.write(Gq/(steps*runs) + ",");
+                    fw.write(Aq/(steps*runs) + "");
                     fw.write("\n");
                 }
             }
