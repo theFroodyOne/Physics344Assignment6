@@ -2,30 +2,31 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
 
-//TODO add "traffic lights" at junctions for phase 3
-//may require queues for built up cars
-
+/**
+ * Extend {@code SimpleModel} to include vehicles entering and exiting the road at junctions.
+ * Some variables are fixed to reflect the real-world setup that is being modelled.
+ */
 public class JunctionModel extends SimpleModel{
     /**
      * Top speed in this version of the model. See report for justification
      */
-    private static final int v = 9;
+    protected static final int v = 9;
     /**
      * Length of the road in this version of the model. See report for justification
      */
-    private static final int l = 74;
+    protected static final int l = 74;
     /**
      * Position of the junction with Merriman Avenue
      */
-    private static final int MerrimanPos = 5;
+    protected static final int MerrimanPos = 5;
     /**
      * Position of the junction with George Blake Street
      */
-    private static final int GeorgeBlakePos = 29;
+    protected static final int GeorgeBlakePos = 29;
     /**
      * Position of the junction with Alexander Street
      */
-    private static final int AlexanderPos = 60;
+    protected static final int AlexanderPos = 60;
     /**
      * Probability of a vehicle entering from Merriman Avenue
      */
@@ -79,7 +80,7 @@ public class JunctionModel extends SimpleModel{
      */
     @Override
     public void step(){
-        //add vehicles at start point & at junctions
+        //add vehicles at start point and at junctions
         if(Math.random() < q && road[0] == null){
             road[0] = new Vehicle();
         }
