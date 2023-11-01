@@ -161,8 +161,7 @@ public class TrafficLightModel extends JunctionModel{
      * @param args Superfluous
      */
     public static void main(String[] args){
-        //TODO run for 1000 for better data
-        int runs = 100;
+        int runs = 1000;
         int steps = 1440;
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase3/data.csv");
