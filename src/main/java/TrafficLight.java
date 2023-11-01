@@ -30,18 +30,23 @@ public class TrafficLight {
      * @return The state of this traffic light
      */
     public boolean check(){
+        return isGreen;
+    }
+
+    public void incrementTime(){
         timeToChange --;
         if(timeToChange == 0){
             change();
             timeToChange = onTime;
         }
-        return isGreen;
     }
 
     /**
      * Change the current state of this traffic light
      */
     public void change(){
+        //for debugging
+        //System.out.println("Light changed");
         isGreen = !isGreen;
     }
 }

@@ -141,6 +141,9 @@ public class TrafficLightModel extends JunctionModel{
             }
         }
         timeStep ++;
+        MerrimanLight.incrementTime();
+        GeorgeBlakeLight.incrementTime();
+        AlexanderLight.incrementTime();
     }
 
     /**
@@ -148,12 +151,13 @@ public class TrafficLightModel extends JunctionModel{
      * @param args Superfluous
      */
     public static void main(String[] args){
-        int runs = 10;
+        //TODO run for 1000 for better data
+        int runs = 100;
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase3/data.csv");
             fw.write("p, t, <v>\n");
-            for(int t = 12; t < 48; t += 4) {
-                for (double p = 0; p < 0.5; p += 0.01) {
+            for(int t = 12; t < 60; t += 4) {
+                for (double p = 0.0; p < 0.6; p += 0.1) {
                     double avg = 0;
                     fw.write(p + ",");
                     fw.write(t + ",");
