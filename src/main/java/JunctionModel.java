@@ -51,11 +51,6 @@ public class JunctionModel extends SimpleModel{
      * Probability of a vehicle exiting via Alexander Street
      */
     double AlexanderOut;
-    /**
-     * Average speed maintained by vehicles on the road
-     */
-    double averageSpeed;
-    int averageSpeedReadings;
 
     /**
      * Constructor. Sets up all the fields with their necessary values
@@ -76,11 +71,24 @@ public class JunctionModel extends SimpleModel{
     }
 
     /**
-     * Update step() from SimpleModel to include vehicles entering/leaving at junctions
+     * Run the simulation for a certain number of time steps
+     * @param numSteps Number of steps to run the simulation for
      */
     @Override
-    public void step(){
-        //add vehicles at start point and at junctions
+    public double run(int numSteps){
+        for(int i = 0; i < numSteps; i ++){
+            step();
+            //for debugging
+            //System.out.println(this);
+        }
+        return averageSpeed/averageSpeedReadings;
+    }
+
+    /**
+     * Expanded for adding vehicles at junctions
+     */
+    @Override
+    protected void addVehicles(){
         if(Math.random() < q && road[0] == null){
             road[0] = new Vehicle();
         }
@@ -93,11 +101,19 @@ public class JunctionModel extends SimpleModel{
         if(Math.random() < AlexanderIn && road[AlexanderPos] == null){
             road[AlexanderPos] = new Vehicle();
         }
+    }
+
+    /**
+     * Expand acceleration step to include removing vehicles at junctions, marking them for
+     * removal and slowing down to avoid overshooting said junctions
+     */
+    @Override
+    protected void acceleration(){
         for(int i = 0; i < l; i ++) {
             if (road[i] == null) {
                 continue;
             }
-            //remove vehicle at junctions
+            //remove vehicles at junctions
             if((Objects.equals(road[i].destination, "Merriman") && i == MerrimanPos - 1) ||
                     (Objects.equals(road[i].destination, "George Blake") && i == GeorgeBlakePos - 1) ||
                     (Objects.equals(road[i].destination, "Alexander") && i == AlexanderPos - 1)){
@@ -105,7 +121,6 @@ public class JunctionModel extends SimpleModel{
                 road[i] = null;
                 continue;
             }
-            //acceleration
             if (road[i].v < v) {
                 road[i].v++;
             }
@@ -122,54 +137,7 @@ public class JunctionModel extends SimpleModel{
                 road[i].destination = "Alexander";
                 road[i].v = AlexanderPos - i - 1;
             }
-            //slowing down
-            for (int j = 1; j <= road[i].v; j++) {
-                try {
-                    if (road[i + j] != null) {
-                        road[i].v = j - 1;
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    break;
-                }
-            }
-            //randomisation
-            if (road[i].v > 0 && Math.random() < p) {
-                road[i].v--;
-            }
         }
-        for(int i = l -1; i >= 0; i --){
-            if (road[i] == null) {
-                continue;
-            }
-            //System.out.println(road[i].v);
-            averageSpeed += road[i].v;
-            averageSpeedReadings ++;
-            //motion
-            if(road[i].v != 0) {
-                try {
-                    road[i + road[i].v] = road[i];
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    vehiclesPassed ++;
-                }
-                road[i] = null;
-            }
-        }
-        timeStep ++;
-    }
-
-    @Override
-    /**
-     * Run the simulation for a certain number of time steps
-     * @param numSteps Number of steps to run the simulation for
-     */
-    public double run(int numSteps){
-        for(int i = 0; i < numSteps; i ++){
-            step();
-            //for debugging
-            //System.out.println(this);
-        }
-        //System.out.println(averageSpeed);
-        return averageSpeed/averageSpeedReadings;
     }
 
     /**
@@ -177,15 +145,15 @@ public class JunctionModel extends SimpleModel{
      * @param args Superfluous
      */
     public static void main(String[] args){
-        int runs = 1000;
+        int runs = 1000, steps = 1440;
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase2/data.csv");
             fw.write("p, v\n");
-            for(double p = 0; p < 0.5; p += 0.01) {
+            for(double p = 0; p < 1; p += 0.01) {
                 double avg = 0;
                 fw.write(p + ",");
                 for (int i = 0; i < runs; i++) {
-                    avg += new JunctionModel(0.7736, p, 0.7132, 0.3139, 0.3938, 0.4007, 0.7132, 0.3139).run(10000);
+                    avg += new JunctionModel(0.7736, p, 0.7132, 0.3139, 0.3938, 0.4007, 0.7132, 0.3139).run(steps);
                 }
                 fw.write(avg / runs + "");
                 fw.write("\n");

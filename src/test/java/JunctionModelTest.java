@@ -43,6 +43,5 @@ public class JunctionModelTest {
         assertNull(jm.road[4]);
         assertNull(jm.road[6]);
         assertNull(jm.road[7]);
-        assertNull(jm.road[28].destination);
     }
 }

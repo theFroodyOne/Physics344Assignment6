@@ -41,7 +41,15 @@ public class SimpleModel {
      */
     int averageTimeOnRoad;
     /**
-     * The road itself, holding {@code true} if there is a vehicle in that position
+     * Total of speed readings
+     */
+    double averageSpeed;
+    /**
+     * Number of speed readings to calculate average
+     */
+    int averageSpeedReadings;
+    /**
+     * The road itself
      */
     Vehicle[] road;
 
@@ -143,6 +151,8 @@ public class SimpleModel {
             if (road[i] == null) {
                 continue;
             }
+            averageSpeed += road[i].v;
+            averageSpeedReadings ++;
             road[i].timeOnRoad++;
             if(road[i].v != 0) {
                 try {
