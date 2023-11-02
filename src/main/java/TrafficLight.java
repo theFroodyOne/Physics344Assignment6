@@ -33,6 +33,9 @@ public class TrafficLight {
         return isGreen;
     }
 
+    /**
+     * Move along one time-step
+     */
     public void incrementTime(){
         timeToChange --;
         if(timeToChange == 0){
