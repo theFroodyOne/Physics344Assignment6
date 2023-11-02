@@ -54,7 +54,28 @@ public class TrafficLightModel extends JunctionModel{
 
     @Override
     public void step(){
-        //add vehicles at start point and at junctions
+        addVehicles();
+        removeAtJunctions();
+        acceleration();
+        turnDecision();
+        slowDown();
+        randomize();
+        move();
+        Mq += MerrimanQueue.size();
+        Gq += GeorgeBlakeQueue.size();
+        Aq += AlexanderQueue.size();
+        timeStep ++;
+        MerrimanLight.incrementTime();
+        GeorgeBlakeLight.incrementTime();
+        AlexanderLight.incrementTime();
+    }
+
+    /**
+     * Add vehicles from side streets to queues, and let them in from those queues only when the
+     * traffic lights let them
+     */
+    @Override
+    protected void addVehicles(){
         if(Math.random() < q && road[0] == null){
             road[0] = new Vehicle();
         }
@@ -76,43 +97,25 @@ public class TrafficLightModel extends JunctionModel{
         if(!AlexanderQueue.isEmpty() && !AlexanderLight.check()){
             road[AlexanderPos] = AlexanderQueue.poll();
         }
+    }
+
+    /**
+     * Include slowing down/stopping for traffic lights
+     */
+    @Override
+    protected void slowDown() {
         for(int i = 0; i < l; i ++) {
             if (road[i] == null) {
                 continue;
             }
-            //remove vehicle at junctions
-            if((Objects.equals(road[i].destination, "Merriman") && i == MerrimanPos - 1) ||
-                    (Objects.equals(road[i].destination, "George Blake") && i == GeorgeBlakePos - 1) ||
-                    (Objects.equals(road[i].destination, "Alexander") && i == AlexanderPos - 1)){
-                vehiclesPassed ++;
-                road[i] = null;
-                continue;
-            }
-            //acceleration
-            if (road[i].v < v) {
-                road[i].v++;
-            }
-            //decide if vehicle will turn off at junction
-            if (road[i].destination == null && i < MerrimanPos && i + road[i].v >= MerrimanPos && Math.random() < MerrimanOut){
-                road[i].destination = "Merriman";
-                road[i].v = MerrimanPos - i - 1;
-            }
-            if (road[i].destination == null && i < GeorgeBlakePos && i + road[i].v >= GeorgeBlakePos && Math.random() < GeorgeBlakeOut){
-                road[i].destination = "George Blake";
-                road[i].v = GeorgeBlakePos - i - 1;
-            }
-            if (road[i].destination == null && i < AlexanderPos && i + road[i].v >= AlexanderPos && Math.random() < AlexanderOut){
-                road[i].destination = "Alexander";
-                road[i].v = AlexanderPos - i - 1;
-            }
             //slowing down for traffic lights
-            if(i < MerrimanPos && i + road[i].v >= MerrimanPos && !MerrimanLight.check()){
+            if (i < MerrimanPos && i + road[i].v >= MerrimanPos && !MerrimanLight.check()) {
                 road[i].v = MerrimanPos - i - 1;
             }
-            if(i < GeorgeBlakePos && i + road[i].v >= GeorgeBlakePos && !GeorgeBlakeLight.check()){
+            if (i < GeorgeBlakePos && i + road[i].v >= GeorgeBlakePos && !GeorgeBlakeLight.check()) {
                 road[i].v = GeorgeBlakePos - i - 1;
             }
-            if(i < AlexanderPos && i + road[i].v >= AlexanderPos && !AlexanderLight.check()){
+            if (i < AlexanderPos && i + road[i].v >= AlexanderPos && !AlexanderLight.check()) {
                 road[i].v = AlexanderPos - i - 1;
             }
             //slowing down for other vehicles
@@ -125,35 +128,7 @@ public class TrafficLightModel extends JunctionModel{
                     break;
                 }
             }
-            //randomisation
-            if (road[i].v > 0 && Math.random() < p) {
-                road[i].v--;
-            }
         }
-        for(int i = l -1; i >= 0; i --){
-            if (road[i] == null) {
-                continue;
-            }
-            //System.out.println(road[i].v);
-            averageSpeed += road[i].v;
-            averageSpeedReadings ++;
-            //motion
-            if(road[i].v != 0) {
-                try {
-                    road[i + road[i].v] = road[i];
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    vehiclesPassed ++;
-                }
-                road[i] = null;
-            }
-        }
-        Mq += MerrimanQueue.size();
-        Gq += GeorgeBlakeQueue.size();
-        Aq += AlexanderQueue.size();
-        timeStep ++;
-        MerrimanLight.incrementTime();
-        GeorgeBlakeLight.incrementTime();
-        AlexanderLight.incrementTime();
     }
 
     /**
@@ -161,7 +136,7 @@ public class TrafficLightModel extends JunctionModel{
      * @param args Superfluous
      */
     public static void main(String[] args){
-        int runs = 1000;
+        int runs = 10;
         int steps = 1440;
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase3/data.csv");
