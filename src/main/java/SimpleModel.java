@@ -69,20 +69,45 @@ public class SimpleModel {
      * Move the simulation forward by a single time-step
      */
     public void step(){
-        //add vehicles at start point
+        addVehicles();
+        acceleration();
+        slowDown();
+        randomize();
+        move();
+        timeStep ++;
+    }
+
+    /**
+     * Add vehicles to the start of the road with probability {@code q}
+     */
+    protected void addVehicles(){
         if(Math.random() < q && road[0] == null){
             road[0] = new Vehicle();
         }
+    }
+
+    /**
+     * Vehicles not moving at the maximum speed accelerate
+     */
+    protected void acceleration(){
         for(int i = 0; i < l; i ++) {
             if (road[i] == null) {
                 continue;
             }
-            //acceleration
-            road[i].timeOnRoad++;
             if (road[i].v < v) {
                 road[i].v++;
             }
-            //slowing down
+        }
+    }
+
+    /**
+     * Vehicles must slow down so as not to hit another vehicle in front of it
+     */
+    protected void slowDown(){
+        for(int i = 0; i < l; i ++) {
+            if (road[i] == null) {
+                continue;
+            }
             for (int j = 1; j <= road[i].v; j++) {
                 try {
                     if (road[i + j] != null) {
@@ -92,16 +117,33 @@ public class SimpleModel {
                     break;
                 }
             }
-            //randomisation
+        }
+    }
+
+    /**
+     * Some fraction {@code p} of vehicles slow down randomly
+     */
+    protected void randomize(){
+        for(int i = 0; i < l; i ++) {
+            if (road[i] == null) {
+                continue;
+            }
             if (road[i].v > 0 && Math.random() < p) {
                 road[i].v--;
             }
         }
+    }
+
+    /**
+     * Move vehicles forward at the end of the time-step and remove them from the road if they
+     * reach the end
+     */
+    protected void move(){
         for(int i = l -1; i >= 0; i --){
             if (road[i] == null) {
                 continue;
             }
-            //motion
+            road[i].timeOnRoad++;
             if(road[i].v != 0) {
                 try {
                     road[i + road[i].v] = road[i];
@@ -112,7 +154,6 @@ public class SimpleModel {
                 road[i] = null;
             }
         }
-        timeStep ++;
     }
 
     /**
