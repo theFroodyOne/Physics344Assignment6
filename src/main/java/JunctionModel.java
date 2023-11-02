@@ -71,6 +71,21 @@ public class JunctionModel extends SimpleModel{
     }
 
     /**
+     * Include removing and adding vehicles at junctions
+     */
+    @Override
+    public void step(){
+        addVehicles();
+        removeAtJunctions();
+        acceleration();
+        turnDecision();
+        slowDown();
+        randomize();
+        move();
+        timeStep ++;
+    }
+
+    /**
      * Run the simulation for a certain number of time steps
      * @param numSteps Number of steps to run the simulation for
      */
@@ -104,27 +119,30 @@ public class JunctionModel extends SimpleModel{
     }
 
     /**
-     * Expand acceleration step to include removing vehicles at junctions, marking them for
-     * removal and slowing down to avoid overshooting said junctions
+     * Remove the vehicles that turned off at a junction
      */
-    @Override
-    protected void acceleration(){
+    protected void removeAtJunctions(){
         for(int i = 0; i < l; i ++) {
             if (road[i] == null) {
                 continue;
             }
-            //remove vehicles at junctions
-            if((Objects.equals(road[i].destination, "Merriman") && i == MerrimanPos - 1) ||
+            if ((Objects.equals(road[i].destination, "Merriman") && i == MerrimanPos - 1) ||
                     (Objects.equals(road[i].destination, "George Blake") && i == GeorgeBlakePos - 1) ||
-                    (Objects.equals(road[i].destination, "Alexander") && i == AlexanderPos - 1)){
-                vehiclesPassed ++;
+                    (Objects.equals(road[i].destination, "Alexander") && i == AlexanderPos - 1)) {
+                vehiclesPassed++;
                 road[i] = null;
+            }
+        }
+    }
+
+    /**
+     * Decide(randomly) which vehicles will be turning off at which junctions
+     */
+    protected void turnDecision(){
+        for(int i = 0; i < l; i ++) {
+            if (road[i] == null) {
                 continue;
             }
-            if (road[i].v < v) {
-                road[i].v++;
-            }
-            //decide if vehicle will turn off at junction
             if (road[i].destination == null && i < MerrimanPos && i + road[i].v >= MerrimanPos && Math.random() < MerrimanOut){
                 road[i].destination = "Merriman";
                 road[i].v = MerrimanPos - i - 1;
@@ -145,7 +163,7 @@ public class JunctionModel extends SimpleModel{
      * @param args Superfluous
      */
     public static void main(String[] args){
-        int runs = 1000, steps = 1440;
+        int runs = 10, steps = 1440;
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase2/data.csv");
             fw.write("p, v\n");
