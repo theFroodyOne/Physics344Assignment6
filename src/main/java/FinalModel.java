@@ -1,6 +1,8 @@
 import java.io.FileWriter;
 import java.io.IOException;
 
+//TODO majorly a work in progress, might even throw everything out entirely
+
 public class FinalModel {
     public static void main(String[] args){
         double d = 0.2;
@@ -18,7 +20,7 @@ public class FinalModel {
                     for (int i = 0; i < runs; i++) {
                         TrafficLightModel R44 = new TrafficLightModel(0.7736, p, 0.7132, 0.3139, 0.3938, 0.4007, 0.7132, 0.3139, t);
                         //TODO
-                        SimpleModel DuToitStreet = new SimpleModel(0, p, 9, 80);
+                        SimpleModel DuToitStreet = new SimpleModel(0, p, 6, 80);
                         avg += R44.run(steps);
                         Mq += R44.Mq;
                         Gq += R44.Gq;

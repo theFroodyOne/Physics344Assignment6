@@ -35,7 +35,7 @@ For phase 1, the model stuck closely to the original proposal in (Nagel \& Schre
 
 This model was implemented in Java (see src/main/java/SimpleModel.java) this creates a class that can be instantiated using the four independent variables in the model at this phase: $q$, $p$, $v$ and $l$. One instantiated, the simulation can be run for single time-step at a time (using \texttt{step()}) or for any number of time-steps (using \texttt{run(int numSteps)}, which returns the average number of time-steps a vehicle spent on the road in that run).
 
-To obtain some exploratory data, $1000$ simulations were run with values of $q \in \{0.1, ... , 1\}$, $p \in \{0, ... , 0.9\}$, $v \in \{3, 6, 9, 12\}$ and $l \in \{5, 10, 20, 40, 80\}$ for $10000$ time-steps, and the average number of time-steps a vehicle spends on the road (time on road, TOR) was recorded (data/phase1/data.csv). This data was then analysed using numpy and matplotlib in dataAnalysis.ipynb. The coefficient of determination $r^{2}$ was calculated between every independent variable and TOR. For more detailed information, the coefficient of determination was also calculated for selected subsets of the data (e.g. effect of $v$ when $p$ is low).
+To obtain some exploratory data, $1000$ simulations were run with values of $q \in \{0.1, \dots , 1\}$, $p \in \{0, \dots , 0.9\}$, $v \in \{3, 6, 9, 12\}$ and $l \in \{5, 10, 20, 40, 80\}$ for $10000$ time-steps, and the average number of time-steps a vehicle spends on the road (time on road, TOR) was recorded (data/phase1/data.csv). This data was then analysed using numpy and matplotlib in dataAnalysis.ipynb. The coefficient of determination $r^{2}$ was calculated between every independent variable and TOR. For more detailed information, the coefficient of determination was also calculated for selected subsets of the data (e.g. effect of $v$ when $p$ is low).
 
 \subsection*{Results}
 
@@ -55,7 +55,7 @@ Since $l$ has such a dominating effect, observations were also made with $l$ fix
 \textbf{\large Average TOR as a function of $v$, with fixed $l=80$ and $p \leq 0.2$}\par\medskip
 \rotatebox{90}{{\hspace*{3cm}{\large TOR}}}
 \includegraphics[scale = 0.55, left]{./data/phase1/v_vs_timeOnRoad_l=80_lowp.png}
-\vspace*{0.1cm}\hspace*{4.5cm}{\large $p$}
+\vspace*{0.1cm}\hspace*{4.5cm}{\large $v$}
 \caption{\label{fig} Looking at low $p$ regimes, the effect of $v$ predominates, i.e. increasing $v$ reduces TOR significantly, albeit with diminishing returns.}
 \end{figure}
 
@@ -63,7 +63,7 @@ Since $l$ has such a dominating effect, observations were also made with $l$ fix
 \textbf{\large Average TOR as a function of $q$, with fixed $l=80$ and $p \geq 0.8$}\par\medskip
 \rotatebox{90}{{\hspace*{3cm}{\large TOR}}}
 \includegraphics[scale = 0.55, left]{./data/phase1/q_vs_timeOnRoad_l=80_highp.png}
-\vspace*{0.1cm}\hspace*{4.5cm}{\large $p$}
+\vspace*{0.1cm}\hspace*{4.5cm}{\large $q$}
 \caption{\label{fig} Looking at high $p$ regimes, the effect of $q$ predominates, i.e. more cars on the road slows things down regardless of top speeds.}
 \end{figure}
 
@@ -107,7 +107,7 @@ Finally, using TOR as a metric in this phase would be complicated by the fact th
 
 This model was implemented in the \texttt{JunctionModel} class, which is a subclass of \texttt{SimpleModel} used for phase 1. Fields were added for the inflow and outflow probabilities as indictated in the table above, with $v$ and $l$ now fixed to correspond to their real-world values. Furthermore, the \texttt{step()} function had to be updated to mark vehicles that will leave the road at the next junction (which necessitated a \texttt{destination} field to be added to the \texttt{vehicle} class) and to remove these when they reached the junction in question. \texttt{run(int numSteps)} was also updated to record average speeds instead of TOR.
 
-1000 simulations were run for 1440 time-steps each (corresponding to 1 hour in real-world time) for each $p \in \{0, 0.01, ... , 0.49\}$ and the average speed recorded in data/phase2/data.csv.
+1000 simulations were run for 1440 time-steps each (corresponding to 1 hour in real-world time) for each $p \in \{0, 0.01, \dots , 0.49\}$ and the average speed recorded in data/phase2/data.csv.
 
 \subsection*{Results}
 
@@ -124,6 +124,16 @@ A travel time of 3 minutes implies an average speed of $v=1.022$ and 7 minutes $
 \vspace*{0.1cm}\hspace*{4.5cm}{\large $p$}
 \caption{\label{fig} Average speeds are low overall due to high congestion, but are even lower at high $p$.}
 \end{figure}
+
+\section*{Phase 2: Inflows and outflows via junctions}
+
+\subsection*{The model}
+
+In this phase, the model was improved by the addition of traffic lights regulating flow at junctions. Traffic lights are modelled to all be identical, being red half the time and green the other half, switching between these states every $t$ time-steps. The main goal of this phase was too investigate the effect this $t$ has at various values of $p$. Given the results of phase 2, $p$ was restricted to $[0.05, 0.65)$. $t$ was taken between 1---2.5s, hardly enough time for even one vehicle to cross---to 120---5 minutes, long enough to make the most law-abiding citizen question if the light is even working anymore.
+
+\subsection*{Implementation}
+
+This phase of the model was implemented in the \texttt{TrafficLightModel} class. Incoming vehicles from junctions were added to queues, waiting for the light to turn green to allow them onto the R44. Average speeds on the R44 itself and average lengths of all queues over 1000 runs were recorded in data/phase2/data.csv for $t \in \{1, \dots , 120\}$ and $p \in \{0.05, 0.1, \dots , 0.65\}$
 
 \section*{Conclusion}
 
