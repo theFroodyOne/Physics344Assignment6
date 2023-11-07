@@ -163,7 +163,7 @@ public class JunctionModel extends SimpleModel{
      * @param args Superfluous
      */
     public static void main(String[] args){
-        int runs = 10, steps = 1440;
+        int runs = 1000, steps = 1440;
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase2/data.csv");
             fw.write("p, v\n");
@@ -171,7 +171,7 @@ public class JunctionModel extends SimpleModel{
                 double avg = 0;
                 fw.write(p + ",");
                 for (int i = 0; i < runs; i++) {
-                    avg += new JunctionModel(0.7736, p, 0.7132, 0.3139, 0.3938, 0.4007, 0.7132, 0.3139).run(steps);
+                    avg += new JunctionModel(0.7736, p, 0.7132, 0.3139, 0.3938, 0.4007, 0.4725, 0.1640).run(steps);
                 }
                 fw.write(avg / runs + "");
                 fw.write("\n");

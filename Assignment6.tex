@@ -93,39 +93,29 @@ At this point, the model still had 8 variables, all of which could vary independ
  Merriman & Outgoing & 0.3139 \\
  George Blake & Incoming & 0.3938 \\
  George Blake & Outgoing & 0.4007 \\
- Alexander & Incoming & 0.7132 \\
- Alexander & Outgoing & 0.3139 \\
+ Alexander & Incoming & 0.4725 \\
+ Alexander & Outgoing & 0.1640 \\
  \hline
 \end{tabular}
 \end{center}
 
-Data for Alexander Street was not available in (Bredenhann, 2022), so it was assumed to have similar flows to Merriman Avenue. $[0, 0.5)$ was selected as a reasonable range for $p$.
+Data for Alexander Street was not available in (Bredenhann, 2022), so data was collected on the evening of Friday 3 November from 16:20 until around 17:10. Control data was also collected for incoming vehicles on the north end of the R44 so an adjustment could be made for presumed lower traffic volumes on Fridays, and due to the relative dearth of student drivers during the exam period. Traffic flow on the R44 was 85.10\% of those recorded in (Bredenhann, 2022), so volumes recorded on Alexander street were multiplied by a factor of 1.175.
 
-Finally, using TOR as a metric in this phase would be inappropriate since vehicles coming in from different junctions have different lengths of road to cover, and lumping them all together would not yield any insightful results. Therefore, the average speed would be the main metric of interest, from which TOR from each junction can be estimated.
+Finally, using TOR as a metric in this phase would be complicated by the fact that vehicles coming in from different junctions have different lengths of road to cover, and lumping them all together would not yield any insightful results. Therefore, the average speed would be the main metric of interest, from which TOR from each junction can be estimated.
 
 \subsection*{Implementation}
 
 This model was implemented in the \texttt{JunctionModel} class, which is a subclass of \texttt{SimpleModel} used for phase 1. Fields were added for the inflow and outflow probabilities as indictated in the table above, with $v$ and $l$ now fixed to correspond to their real-world values. Furthermore, the \texttt{step()} function had to be updated to mark vehicles that will leave the road at the next junction (which necessitated a \texttt{destination} field to be added to the \texttt{vehicle} class) and to remove these when they reached the junction in question. \texttt{run(int numSteps)} was also updated to record average speeds instead of TOR.
 
-Again, 1000 simulations were run for 10000 time-steps each for each $p \in \{0, 0.01, ... , 0.49\}$ and the average speed recorded in data/phase2/data.csv.
+1000 simulations were run for 1440 time-steps each (corresponding to 1 hour in real-world time) for each $p \in \{0, 0.01, ... , 0.49\}$ and the average speed recorded in data/phase2/data.csv.
 
 \subsection*{Results}
 
-Average speeds were quite low, reflecting real-world traffic conditions. Higher values of $p$ also supress speeds, as expected (fig. 5). At $p=0$, the ideal case, $v$ was already just 0.6474, roughly equivalent to 7km/h. The worst case that was examined, $p=0.49$, had an average speed of just 0.4700, or about 5km/h. Some extrapolated travel times are shown in the table below.
+Average speeds were on the low end, reflecting real-world traffic conditions. Higher values of $p$ also supress speeds, as may be expected (fig. 5). In the ideal case, when $p=0$, speeds reached $v=1.178$, corresponding to a real-world 12.72km/h, degenerating to $v=0$ when $p=1$ and no vehicle ever moves.
 
-\begin{center}
-\begin{tabular}{ |c|c|c|c| }
- \hline
- Starting point & Destination & Best case travel time & Worst case travel time \\
- \hline
- R44 (i.e. already on road) & R310 & 4m44s & 6m31s \\
- Merriman & R310 & 4m26s & 6m7s \\
- George Blake & Alexander & 2m0s & 2m45s \\
- \hline
-\end{tabular}
-\end{center}
+Google maps predicts travel times on the entire stretch from just above Merriman to the R310 to be "typically 3-7 minutes" at 5pm on a Tuesday evening (ie. evening peak hours)(Google 2023b). Combined with the data generated here, this can be used to estimate $p$ on this road segment.
 
-The travel times for the whole route (R44 to R310) fall within the range Google maps predicts at 5pm on a Tuesday evening (ie. eveneing peak hours) which is "typically 3-7 minutes" (Google 2023b)
+A travel time of 3 minutes implies an average speed of $v=1.022$ and 7 minutes $v=0.4381$, which correspond to $p=0.08$ and $p=0.62$ respectively. The median travel time of 5 minutes corresponds to $p=0.31$.
 
 \begin{figure}
 \textbf{\large Average speed as a function of $p$}\par\medskip

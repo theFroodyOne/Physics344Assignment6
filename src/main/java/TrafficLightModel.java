@@ -151,7 +151,7 @@ public class TrafficLightModel extends JunctionModel{
                     fw.write(p + ",");
                     fw.write(t + ",");
                     for (int i = 0; i < runs; i++) {
-                        TrafficLightModel tlm = new TrafficLightModel(0.7736, p, 0.7132, 0.3139, 0.3938, 0.4007, 0.7132, 0.3139, t);
+                        TrafficLightModel tlm = new TrafficLightModel(0.7736, p, 0.7132, 0.3139, 0.3938, 0.4007, 0.4725, 0.1640, t);
                         avg += tlm.run(steps);
                         Mq += tlm.Mq;
                         Gq += tlm.Gq;
