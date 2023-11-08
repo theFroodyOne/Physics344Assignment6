@@ -6,7 +6,8 @@
 \author{Zander Vermeulen}
 \date{13 November 2023}
 
-%TODO images out the wazoo
+%TODO for the love of GOD proofread properly before handing in, esp earlier phases
+%FIG NUMS
 
 \begin{document}
 
@@ -125,7 +126,7 @@ A travel time of 3 minutes implies an average speed of $v=1.022$ and 7 minutes $
 \caption{\label{fig} Average speeds are low overall due to high congestion, but are even lower at high $p$.}
 \end{figure}
 
-\section*{Phase 2: Inflows and outflows via junctions}
+\section*{Phase 3: Traffic lights}
 
 \subsection*{The model}
 
@@ -134,6 +135,56 @@ In this phase, the model was improved by the addition of traffic lights regulati
 \subsection*{Implementation}
 
 This phase of the model was implemented in the \texttt{TrafficLightModel} class. Incoming vehicles from junctions were added to queues, waiting for the light to turn green to allow them onto the R44. Average speeds on the R44 itself and average lengths of all queues over 1000 runs were recorded in data/phase2/data.csv for $t \in \{1, \dots , 120\}$ and $p \in \{0.05, 0.1, \dots , 0.65\}$
+
+\subsection*{Results}
+
+Results different quantitatively quite widely for different $p$, but always following a similar pattern: slow average speeds when $t$ is small and vehicles have to stop at junctions all the time, a peak somewhere between $t=22$ (when $p=0.05$) and $t=40$ (when $p=0.6$), and then tailing off for larger $t$ with vehicles having to wait for long periods. Some graphs of $\langle t \rangle$ versus $t$ for selected $p$ are shown in figs. 6-9 %todo check this
+
+\begin{figure}
+\textbf{\large Average speed as a function of $t$ at $p=0.05$}\par\medskip
+\rotatebox{90}{{\hspace*{3cm}{\large $\langle v \rangle$}}}
+\includegraphics[scale = 0.55, left]{./data/phase3/v_vs_t_p=0.05.png}
+\vspace*{0.1cm}\hspace*{4.5cm}{\large $t$}
+\caption{\label{fig} At the lowest $p$ considered in this phase, $\langle v \rangle$ peaks at $t=22$, meaning the traffic light changes state every 55 seconds}
+\end{figure}
+
+\begin{figure}
+\textbf{\large Average speed as a function of $t$ at $p=0.15$}\par\medskip
+\rotatebox{90}{{\hspace*{3cm}{\large $\langle v \rangle$}}}
+\includegraphics[scale = 0.55, left]{./data/phase3/v_vs_t_p=0.15.png}
+\vspace*{0.1cm}\hspace*{4.5cm}{\large $t$}
+\caption{\label{fig} At the lowest $p$ considered in this phase, $\langle v \rangle$ peaks at $t=31$, meaning the traffic light changes state every 77.5 seconds}
+\end{figure}
+
+\begin{figure}
+\textbf{\large Average speed as a function of $t$ at $p=0.3$}\par\medskip
+\rotatebox{90}{{\hspace*{3cm}{\large $\langle v \rangle$}}}
+\includegraphics[scale = 0.55, left]{./data/phase3/v_vs_t_p=0.3.png}
+\vspace*{0.1cm}\hspace*{4.5cm}{\large $t$}
+\caption{\label{fig} At the lowest $p$ considered in this phase, $\langle v \rangle$ peaks at $t=27$, meaning the traffic light changes state every 67.5 seconds}
+\end{figure}
+
+\begin{figure}
+\textbf{\large Average speed as a function of $t$ at $p=0.6$}\par\medskip
+\rotatebox{90}{{\hspace*{3cm}{\large $\langle v \rangle$}}}
+\includegraphics[scale = 0.55, left]{./data/phase3/v_vs_t_p=0.6.png}
+\vspace*{0.1cm}\hspace*{4.5cm}{\large $t$}
+\caption{\label{fig} At the lowest $p$ considered in this phase, $\langle v \rangle$ peaks at $t=40$, meaning the traffic light changes state every 100 seconds}
+\end{figure}
+
+Average queue lengths did not differ much for different $p$, so fig. 10 is fairly representative.
+
+\begin{figure}
+\textbf{\large Average queue lengths of $t$ at $p=0.3$}\par\medskip
+\rotatebox{90}{{\hspace*{3cm}{\large $\langle v \rangle$}}}
+\includegraphics[scale = 0.55, left]{./data/phase3/queue_lengths_vs_t_p=0.3.png}
+\vspace*{0.1cm}\hspace*{4.5cm}{\large $t$}
+\caption{\label{fig} Average queue lengths as a function of $t$. Blue represents Merriman, orange George Blake, and green Alexander Street}
+\end{figure}
+
+\subsection*{Discussion}
+
+It is interesting to note that 1. for some $t$, average speeds were significantly faster than those recorded in phase 2 for the same $p$, and 2. the wavy pattern shown at high $t$ in figs. 6-9.
 
 \section*{Conclusion}
 
