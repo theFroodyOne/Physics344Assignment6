@@ -17,7 +17,7 @@
 
 The aim of this project was to adapt and expand the model proposed in (Nagel \& Schrekenberg, 1992) to model traffic flow (specifically, southbound traffic during evening peak hours) on and around the R44 between Merriman avenue and the Y-junction with the R310. Data from Google Maps as well as the author's personal experience shows that this is one of the most congested road segments in Stellenbosch (fig. 1). This model could then be used to evaluate strategies employed by road users in an attempt to circumvent this traffic, as well as considering infrastructure changes that could ameliorate the situation.
 
-This project proceeded in multiple phases. At first, the original Nagel-Schreckenberg model was only slightly adjusted to model a linear road segment. Phase 2 involved the addition of junctions along this road segment, while phase 3 considered the effects of traffic lights. In phase 4, the strategy of using Du Toit street to bypass traffic was evaluated, and phase 5 examined the effects that having multiple lanes has on traffic flow, as well as the effects of adding/removing lanes.
+This project proceeded in multiple phases. At first, the original Nagel-Schreckenberg model was only slightly adjusted to model a linear road segment. Phase 2 involved the addition of junctions along this road segment, while phase 3 considered the effects of traffic lights. In phase 4, the strategy of using Du Toit street to bypass traffic was evaluated.
 
 All the code, data and resources used in this project is available on GitHub at: https://github.com/theFroodyOne/Physics344Assignment6
 
@@ -130,11 +130,11 @@ A travel time of 3 minutes implies an average speed of $v=1.022$ and 7 minutes $
 
 \subsection*{The model}
 
-In this phase, the model was improved by the addition of traffic lights regulating flow at junctions. Traffic lights are modelled to all be identical, being red half the time and green the other half, switching between these states every $t$ time-steps. The main goal of this phase was too investigate the effect this $t$ has at various values of $p$. Given the results of phase 2, $p$ was restricted to $[0.05, 0.65)$. $t$ was taken between 1---2.5s, hardly enough time for even one vehicle to cross---to 120---5 minutes, long enough to make the most law-abiding citizen question if the light is even working anymore.
+In this phase, the model was improved by the addition of traffic lights regulating flow at junctions. Traffic lights are modelled to all be identical, being red half the time and green the other half, switching between these states every $t$ time-steps. The main goal of this phase was too investigate the effect this $t$ has at various values of $p$. Given the results of phase 2, $p$ was restricted to $[0.05, 0.65)$. $t$ was taken between 1---2.5s, hardly enough time for even one vehicle to cross---to 120---5 minutes, long enough to make even the most law-abiding citizen question if the light is even working anymore.
 
 \subsection*{Implementation}
 
-This phase of the model was implemented in the \texttt{TrafficLightModel} class. Incoming vehicles from junctions were added to queues, waiting for the light to turn green to allow them onto the R44. Average speeds on the R44 itself and average lengths of all queues over 1000 runs were recorded in data/phase2/data.csv for $t \in \{1, \dots , 120\}$ and $p \in \{0.05, 0.1, \dots , 0.65\}$
+This phase of the model was implemented in the \texttt{TrafficLightModel} class. Incoming vehicles from junctions were added to queues, waiting for the light to turn green to allow them onto the R44. Average speeds on the R44 itself and average lengths of all queues over 1000 runs were recorded in data/phase2/data.csv for $t \in \{1, \dots , 120\}$ and $p \in \{0.05, 0.1, \dots , 0.65\}$.
 
 \subsection*{Results}
 
@@ -184,7 +184,19 @@ Average queue lengths did not differ much for different $p$, so fig. 10 is fairl
 
 \subsection*{Discussion}
 
-It is interesting to note that 1. for some $t$, average speeds were significantly faster than those recorded in phase 2 for the same $p$, and 2. the wavy pattern shown at high $t$ in figs. 6-9.
+It is interesting to note that 1. for some $t$, average speeds were significantly faster than those recorded in phase 2 for the same $p$, and 2. the wavy pattern shown at high $t$ in figs. 6-9. The first of these can be explained by the fact that in phase 2, vehicles entered the road willy-nilly at an initial speed of 0, constantly causing all traffic to slow down. In phase 3, however, vehicles can move unimpeded half the time, when the traffic lights are green.
+
+Explaining the second phenomenon is a bit more tricky, since there does not seem to be any obvious pattern. It is clear that the waves increase in intensity and period as $t$ increases (except possibly at higher $p$---the data is a bit too murky there to be certain), but this is not particularly helpful when trying to pin down a cause. One possible explanation is a kind of "harmonic" effect, where $\langle v \rangle$ is higher at values near particular multiples of the peak $t$, but further investigation will be required to confirm this, which falls outside the scope of the present study.
+
+\section*{Phase 4: Parallel traffic flow in Du Toit street}
+
+\subsection*{The model}
+
+Conceptually, phase 4 is a fairly minor evolution of phase 3. Vehicles on Merriman waiting to enter the R44 can make their way down Du Toit street instead and skip a lot of traffic by joining the R44 at Alexander street instead. This adds a third variable to the equation, $d$, the probability that a vehicle waiting on Merriman Avenue takes this detour. To assess this strategy, two factors will be considered: whether the vehicles taking the detour indeed reach their destination faster, and any effect thaking the detour may have on overall flow of traffic.
+
+It stands to reason that $p$ and $t$ should not change too much from one evening to the next, so, to simplify things, these were fixed to particular values for this phase. The data collected for Alexander Street also included timings on traffic lights, which averaged around 30-40 seconds between every state change, depending on traffic conditions. This corresponds to $12 \leq t \leq 16$, noticeably lower than the values that produced the highest $\langle v \rangle$ in phase 3. The average value of $t=14$ was fixed for this phase. Given the findings in phase 2, $p$ was also fixed to 0.3.
+
+\subsection*{Implementation}
 
 \section*{Conclusion}
 
@@ -196,7 +208,8 @@ Bredenhann, C. (2022). \textit{Stellenbosch Municipality Roads Master Plan: 2022
 
 Google. (2023a). Retrieved 25 October 2023 from https://www.google.com/maps/@-33.9354554,18.8545061,17z/data=!5m1!1e1?entry=ttu
 
-Google. (2023b). Retrieved 31 October 2023 from https://www.google.com/maps/dir/-33.9325783,18.8529169/-33.9371228,18.8515087/@-33.9349965,18.8496809,17z/data=!4m6!4m5!2m3!6e0!7e2!8j1698771600!3e0?entry=ttu
+Google. (2023b). Retrieved 31 October 2023 from https://www.google.com/maps/dir/-33.9325783,18.8529169/-33.9371228,18.8515087/@-33.9349965,18.8496809,17z/data=
+!4m6!4m5!2m3!6e0!7e2!8j1698771600!3e0?entry=ttu
 
 Nagel, K.; Schreckenberg, M. (1992). "A cellular automaton model for freeway traffic". \textit{Journal de Physique I} 2(12) doi:10.1051/jp1:1992277
 
