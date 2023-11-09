@@ -1,5 +1,4 @@
 public class DuToitModel extends SimpleModel{
-
     private static final int l = 60;
 
     /**
@@ -15,11 +14,28 @@ public class DuToitModel extends SimpleModel{
 
     @Override
     protected void addVehicles(){
-        //TODO take in vehicles from Merriman queue of FinalModel instead
+        //empty since FinalModel handles it
     }
 
+    /**
+     * Update so vehicles wait at the end of the road for FinalModel to pick them up
+     */
     @Override
-    protected void move(){
-        //TODO dump vehicles that fall off the end onto Alexander queue
+    protected void slowDown(){
+        for(int i = 0; i < l; i ++) {
+            if (road[i] == null) {
+                continue;
+            }
+            for (int j = 1; j <= road[i].v; j++) {
+                try {
+                    if (road[i + j] != null) {
+                        road[i].v = j - 1;
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    road[i].v = j - 1;
+                    break;
+                }
+            }
+        }
     }
 }
