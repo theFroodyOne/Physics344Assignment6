@@ -14,7 +14,13 @@ public class Vehicle {
      * Destination of this vehicle to determine where it should turn etc.
      */
     String destination;
+    /**
+     * Origin of the vehicle to compare like with like for TOR
+     */
     String origin;
+    /**
+     * The route this vehicle followed so TOR for different routes can be compared
+     */
     String route;
 
     /**
@@ -26,5 +32,6 @@ public class Vehicle {
         timeOnRoad = 0;
         destination = null;
         origin = null;
+        route = null;
     }
 }

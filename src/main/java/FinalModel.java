@@ -7,6 +7,8 @@ public class FinalModel extends TrafficLightModel{
     private static final int lightTimes = 14;
     private final DuToitModel DuToit;
     private final double d;
+    protected int TORDetour;
+    protected int detourPassed;
 
     /**
      * Constructor. Sets up all the fields with their necessary values
@@ -17,6 +19,8 @@ public class FinalModel extends TrafficLightModel{
         super(q, p, mIn, mOut, gIn, gOut, aIn, aOut, lightTimes);
         DuToit = new DuToitModel(0, p, v);
         this.d = d;
+        TORDetour = 0;
+        detourPassed = 0;
     }
 
     /**
@@ -52,11 +56,12 @@ public class FinalModel extends TrafficLightModel{
             road[GeorgeBlakePos] = GeorgeBlakeQueue.poll();
         }
         if(DuToit.road[DuToitModel.l-1] != null){
-            AlexanderQueue.add(new Vehicle());
+            AlexanderQueue.add(DuToit.road[DuToitModel.l-1]);
         }
         if(!AlexanderQueue.isEmpty() && !AlexanderLight.check()){
             road[AlexanderPos] = AlexanderQueue.poll();
         }
+        DuToit.step();
     }
 
     /**
@@ -77,8 +82,15 @@ public class FinalModel extends TrafficLightModel{
                     road[i + road[i].v] = road[i];
                 } catch (ArrayIndexOutOfBoundsException e) {
                     if(Objects.equals(road[i].origin, "Merriman")) {
-                        averageTimeOnRoad += road[i].timeOnRoad;
-                        vehiclesPassed ++;
+                        if(!Objects.equals(road[i].route, "DuToit")) {
+                            averageTimeOnRoad += road[i].timeOnRoad;
+                            vehiclesPassed++;
+                        }else{
+                            System.out.println(road[i].route);
+                            System.out.println(road[i].timeOnRoad);
+                            TORDetour += road[i].timeOnRoad;
+                            detourPassed++;
+                        }
                     }
                 }
                 road[i] = null;
@@ -87,26 +99,33 @@ public class FinalModel extends TrafficLightModel{
     }
 
     public static void main(String[] args){
-        int runs = 1000;
+        int runs = 1;
         int steps = 1440;
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase4/data.csv");
-            fw.write("p, t, <v>, Mq, Gq, Aq\n");
-            //TODO TOR from Merriman for each route
-            for(double d = 0; d < 1; d += 0.1) {
+            fw.write("d, <v>, Mq, Gq, Aq, R44TOR, detourTOR\n");
+            for(double d = 0; d < 0.1; d += 0.05) {
                 double Mq = 0, Gq = 0, Aq = 0;
                 double avg = 0;
+                double R44TOR = 0, DuToitTOR = 0;
                 for (int i = 0; i < runs; i++) {
                     FinalModel fm = new FinalModel(0.7736, 0.7132, 0.3139, 0.3938, 0.4007, 0.4725, 0.1640, d);
                     avg += fm.run(steps);
                     Mq += fm.Mq;
                     Gq += fm.Gq;
                     Aq += fm.Aq;
+                    R44TOR += (double)fm.averageTimeOnRoad/fm.vehiclesPassed;
+                    System.out.println(fm.TORDetour);
+                    System.out.println(fm.detourPassed);
+                    DuToitTOR += (double)fm.TORDetour/fm.detourPassed;
                 }
+                fw.write(d + ",");
                 fw.write(avg / runs + ",");
                 fw.write(Mq/(steps*runs) + ",");
                 fw.write(Gq/(steps*runs) + ",");
-                fw.write(Aq/(steps*runs) + "");
+                fw.write(Aq/(steps*runs) + ",");
+                fw.write(R44TOR / runs + ",");
+                fw.write(DuToitTOR / runs + "");
                 fw.write("\n");
             }
             fw.close();
