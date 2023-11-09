@@ -1,6 +1,5 @@
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class TrafficLightModel extends JunctionModel{
@@ -8,30 +7,30 @@ public class TrafficLightModel extends JunctionModel{
     /**
      * Queue for vehicles waiting to enter via Merriman Avenue
      */
-    ArrayBlockingQueue<Vehicle> MerrimanQueue;
+    protected final ArrayBlockingQueue<Vehicle> MerrimanQueue;
     /**
      * Queue for vehicles waiting to enter via George Blake Street
      */
-    ArrayBlockingQueue<Vehicle> GeorgeBlakeQueue;
+    protected final ArrayBlockingQueue<Vehicle> GeorgeBlakeQueue;
     /**
      * Queue for vehicles waiting to enter via Alexander Street
      */
-    ArrayBlockingQueue<Vehicle> AlexanderQueue;
+    protected final ArrayBlockingQueue<Vehicle> AlexanderQueue;
     /**
      * Traffic light controlling inflows from Merriman Avenue
      */
-    TrafficLight MerrimanLight;
+    protected final TrafficLight MerrimanLight;
     /**
      * Traffic light controlling inflows from George Blake Street
      */
-    TrafficLight GeorgeBlakeLight;
+    protected final TrafficLight GeorgeBlakeLight;
     /**
      * Traffic light controlling inflows from Alexander Street
      */
-    TrafficLight AlexanderLight;
-    double Mq;
-    double Gq;
-    double Aq;
+    protected final TrafficLight AlexanderLight;
+    protected double Mq;
+    protected double Gq;
+    protected double Aq;
 
     /**
      * Constructor. Sets up all the fields with their necessary values

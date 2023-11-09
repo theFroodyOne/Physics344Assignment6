@@ -30,27 +30,27 @@ public class JunctionModel extends SimpleModel{
     /**
      * Probability of a vehicle entering from Merriman Avenue
      */
-    double MerrimanIn;
+    protected final double MerrimanIn;
     /**
      * Probability of a vehicle exiting via Merriman Avenue
      */
-    double MerrimanOut;
+    protected final double MerrimanOut;
     /**
      * Probability of a vehicle entering from George Blake Street
      */
-    double GeorgeBlakeIn;
+    protected final double GeorgeBlakeIn;
     /**
      * Probability of a vehicle exiting via George Blake Street
      */
-    double GeorgeBlakeOut;
+    protected final double GeorgeBlakeOut;
     /**
      * Probability of a vehicle entering from Alexander Street
      */
-    double AlexanderIn;
+    protected final double AlexanderIn;
     /**
      * Probability of a vehicle exiting via Alexander Street
      */
-    double AlexanderOut;
+    protected final double AlexanderOut;
 
     /**
      * Constructor. Sets up all the fields with their necessary values

@@ -14,14 +14,16 @@ public class Vehicle {
      * Destination of this vehicle to determine where it should turn etc.
      */
     String destination;
+    String origin;
 
     /**
      * Initialises a {@code Vehicle} with a particular probability of randomly slowing down and a
      * maximum velocity
      */
     public Vehicle(){
-        this.v = 0;
-        this.timeOnRoad = 0;
-        this.destination = null;
+        v = 0;
+        timeOnRoad = 0;
+        destination = null;
+        origin = null;
     }
 }

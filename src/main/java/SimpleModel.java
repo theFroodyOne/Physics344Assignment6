@@ -15,43 +15,43 @@ public class SimpleModel {
     /**
      * Probability of a vehicle appearing at the start end of the road for each time-step
      */
-    double q;
+    protected final double q;
     /**
      * Probability of any one vehicle randomly slowing down for reasons unknown
      */
-    double p;
+    protected final double p;
     /**
      * Maximum speed a vehicle can achieve on this stretch of road
      */
-    int v;
+    protected final int v;
     /**
      * Length(number of cells) of this stretch of road
      */
-    int l;
+    protected final int l;
     /**
      * Current time-step in the simulation
      */
-    int timeStep;
+    protected int timeStep;
     /**
      * The number of vehicles that have passed over the road so far
      */
-    int vehiclesPassed;
+    protected int vehiclesPassed;
     /**
      * A running average of how man time steps each vehicle spends on the road
      */
-    int averageTimeOnRoad;
+    protected int averageTimeOnRoad;
     /**
      * Total of speed readings
      */
-    double averageSpeed;
+    protected double averageSpeed;
     /**
      * Number of speed readings to calculate average
      */
-    int averageSpeedReadings;
+    protected int averageSpeedReadings;
     /**
      * The road itself
      */
-    Vehicle[] road;
+    protected final Vehicle[] road;
 
     /**
      * Constructor. Sets up all the fields with their necessary values
