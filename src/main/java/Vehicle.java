@@ -15,6 +15,7 @@ public class Vehicle {
      */
     String destination;
     String origin;
+    String route;
 
     /**
      * Initialises a {@code Vehicle} with a particular probability of randomly slowing down and a

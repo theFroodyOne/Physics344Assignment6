@@ -1,5 +1,5 @@
 public class DuToitModel extends SimpleModel{
-    private static final int l = 60;
+    static final int l = 60;
 
     /**
      * Constructor. Sets up all the fields with their necessary values
