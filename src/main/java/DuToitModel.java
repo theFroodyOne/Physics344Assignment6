@@ -1,15 +1,15 @@
 public class DuToitModel extends SimpleModel{
     static final int l = 60;
 
+    //TODO fix bug with TOR going off the rails
+
     /**
      * Constructor. Sets up all the fields with their necessary values
-     *
-     * @param q Probability of a vehicle appearing at the start end of the road for each time-step
      * @param p Probability of any one vehicle randomly slowing down for reasons unknown
      * @param v Maximum speed a vehicle can achieve on this stretch of road
      */
-    public DuToitModel(double q, double p, int v) {
-        super(q, p, v, l);
+    public DuToitModel(double p, int v) {
+        super(0, p, v, l);
     }
 
     @Override
