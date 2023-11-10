@@ -4,8 +4,6 @@
 public class DuToitModel extends SimpleModel{
     static final int l = 60;
 
-    //TODO fix bug with TOR going off the rails
-
     /**
      * Constructor. Sets up all the fields with their necessary values
      * @param p Probability of any one vehicle randomly slowing down for reasons unknown

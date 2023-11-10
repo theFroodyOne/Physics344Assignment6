@@ -108,12 +108,12 @@ public class FinalModel extends TrafficLightModel{
     }
 
     public static void main(String[] args){
-        int runs = 1;
+        int runs = 1000;
         int steps = 1440;
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase4/data.csv");
             fw.write("d, <v>, Mq, Gq, Aq, R44TOR, detourTOR\n");
-            for(double d = 0.99; d < 1; d += 0.5) {
+            for(double d = 0; d < 1; d += 0.01) {
                 double Mq = 0, Gq = 0, Aq = 0;
                 double avg = 0;
                 double R44TOR = 0, DuToitTOR = 0;
