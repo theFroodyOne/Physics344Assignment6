@@ -58,8 +58,8 @@ public class FinalModel extends TrafficLightModel{
             road[GeorgeBlakePos] = GeorgeBlakeQueue.poll();
         }
         if(DuToit.road[DuToitModel.l-1] != null){
-            //System.out.println("TOR when exiting Du Toit street: " + DuToit.road[DuToitModel.l-1].timeOnRoad);
             AlexanderQueue.add(DuToit.road[DuToitModel.l-1]);
+            DuToit.road[DuToitModel.l-1] = null;
         }
         if(!AlexanderQueue.isEmpty() && !AlexanderLight.check()){
             road[AlexanderPos] = AlexanderQueue.poll();
@@ -85,13 +85,9 @@ public class FinalModel extends TrafficLightModel{
                 } catch (ArrayIndexOutOfBoundsException e) {
                     if(Objects.equals(road[i].origin, "Merriman")) {
                         if(!Objects.equals(road[i].route, "DuToit")) {
-                            System.out.println("TOR non-detour:" + road[i].timeOnRoad);
                             averageTimeOnRoad += road[i].timeOnRoad;
-                            System.out.println(vp);
                             vp++;
                         }else{
-                            System.out.println(road[i].route);
-                            System.out.println(road[i].timeOnRoad);
                             TORDetour += road[i].timeOnRoad;
                             detourPassed++;
                         }
@@ -108,7 +104,7 @@ public class FinalModel extends TrafficLightModel{
         try {
             FileWriter fw = new FileWriter("/home/zander/IdeaProjects/Physics344Assignment6/data/phase4/data.csv");
             fw.write("d, <v>, Mq, Gq, Aq, R44TOR, detourTOR\n");
-            for(double d = 0.5; d < 1; d += 0.5) {
+            for(double d = 0.99; d < 1; d += 0.5) {
                 double Mq = 0, Gq = 0, Aq = 0;
                 double avg = 0;
                 double R44TOR = 0, DuToitTOR = 0;
@@ -118,11 +114,7 @@ public class FinalModel extends TrafficLightModel{
                     Mq += fm.Mq;
                     Gq += fm.Gq;
                     Aq += fm.Aq;
-                    System.out.println(fm.averageTimeOnRoad);
-                    System.out.println(fm.vp);
                     R44TOR += (double)fm.averageTimeOnRoad/fm.vp;
-                    System.out.println(fm.TORDetour);
-                    System.out.println(fm.detourPassed);
                     DuToitTOR += (double)fm.TORDetour/fm.detourPassed;
                 }
                 fw.write(d + ",");
