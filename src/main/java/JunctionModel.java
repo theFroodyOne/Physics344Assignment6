@@ -3,7 +3,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * Extend {@code SimpleModel} to include vehicles entering and exiting the road at junctions.
+ * Extend {@code SimpleModel} for phase 2 to include vehicles entering and exiting the road at
+ * junctions.
  * Some variables are fixed to reflect the real-world setup that is being modelled.
  */
 public class JunctionModel extends SimpleModel{

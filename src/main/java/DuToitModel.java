@@ -1,3 +1,6 @@
+/**
+ * Model peculiarities of Du Toit street in phase 4
+ */
 public class DuToitModel extends SimpleModel{
     static final int l = 60;
 

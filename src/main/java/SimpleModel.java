@@ -2,7 +2,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * The original Nagel-Schreckenberg model on a straight stretch of road.
+ * The original Nagel-Schreckenberg model on a straight stretch of road, used for phase 1.
  *
  * <p>
  *     Boundary conditions are such that a vehicle appears at one end of the road at every

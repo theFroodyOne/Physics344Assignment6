@@ -2,6 +2,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 
+/**
+ * Extend {@code JunctionModel} to use traffic lights at junctions(phase 3)
+ */
 public class TrafficLightModel extends JunctionModel{
     private static final int QUEUE_CAP = 10000;
     /**

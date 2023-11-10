@@ -2,6 +2,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * Final model used in phase 4
+ */
 public class FinalModel extends TrafficLightModel{
     private static final double p = 0.3;
     private static final int lightTimes = 14;
@@ -54,6 +57,9 @@ public class FinalModel extends TrafficLightModel{
         if(!MerrimanQueue.isEmpty() && !MerrimanLight.check()){
             road[MerrimanPos] = MerrimanQueue.poll();
         }
+        for(Vehicle v : MerrimanQueue){
+            v.timeOnRoad ++;
+        }
         if(!GeorgeBlakeQueue.isEmpty() && !GeorgeBlakeLight.check()){
             road[GeorgeBlakePos] = GeorgeBlakeQueue.poll();
         }
@@ -63,6 +69,9 @@ public class FinalModel extends TrafficLightModel{
         }
         if(!AlexanderQueue.isEmpty() && !AlexanderLight.check()){
             road[AlexanderPos] = AlexanderQueue.poll();
+        }
+        for(Vehicle v: AlexanderQueue){
+            v.timeOnRoad ++;
         }
         DuToit.step();
     }
