@@ -8,6 +8,7 @@
 
 %TODO for the love of GOD proofread properly before handing in, esp earlier phases
 %FIG NUMS
+%ADD ANALYSIS(NOTEBOOK) TO IMPLEMENTATION/RESULTS
 
 \begin{document}
 
@@ -15,7 +16,7 @@
 
 \section*{Introduction}
 
-The aim of this project was to adapt and expand the model proposed in (Nagel \& Schrekenberg, 1992) to model traffic flow (specifically, southbound traffic during evening peak hours) on and around the R44 between Merriman avenue and the Y-junction with the R310. Data from Google Maps as well as the author's personal experience shows that this is one of the most congested road segments in Stellenbosch (fig. 1). This model could then be used to evaluate strategies employed by road users in an attempt to circumvent this traffic, as well as considering infrastructure changes that could ameliorate the situation.
+The aim of this project was to adapt and expand the model proposed in (Nagel \& Schrekenberg, 1992) to model traffic flow (specifically, southbound traffic during evening peak hours) on and around the R44 between Merriman avenue and the Y-junction with the R310. Data from Google Maps as well as the author's personal experience shows that this is one of the most congested road segments in Stellenbosch (fig. 1). This model could then be used to evaluate a strategie employed by some road users in an attempt to circumvent this traffic (the Du Toit street bypass), as well as considering infrastructure changes that could ameliorate the situation.
 
 This project proceeded in multiple phases. At first, the original Nagel-Schreckenberg model was only slightly adjusted to model a linear road segment. Phase 2 involved the addition of junctions along this road segment, while phase 3 considered the effects of traffic lights. In phase 4, the strategy of using Du Toit street to bypass traffic was evaluated.
 
@@ -198,7 +199,45 @@ It stands to reason that $p$ and $t$ should not change too much from one evening
 
 \subsection*{Implementation}
 
+This phase was implemented mainly in the \texttt{FinalModel} class, with the \texttt{DuToitModel} class as a singleton to model Du Toit street specifically therein. The \texttt{Vehicle} class was modified to track the origins of vehicles, since we are mainly interested in vehicles from Merriman Avenue for this phase, as well as the route they followed (i.e. whether they went straight into the R44 or via Du Toit street) for comparison purposes.
+
+\subsection*{Results}
+
+Somewhat surprisingly, taking the detour down Du Toit street was never significantly faster than going down the R44 (fig. 11). For very low $d$ Du Toit street was marginally faster, but by $d = 0.06$ the R44 was faster and the difference becomes quite stark very quickly at moderate to high $d$. Part of the reason for this may be seen in fig. 12. For $d < 0.14$, the Merriman queue is the longest and causes the most delay, so any transfers to the Alexander queue relieves this pressure and speeds things up. However, when $d \geq 0.14$, the Alexander queue is the longest, so trying to transfer to it from Merriman is counterproductive since you will sped longer waiting there.
+
+Furthermore, vehicles turn into Du Toit street from the head of the Merriman queue (in the simulation at least, in reality the two junctions are a few metres apart) which means that vehicles taking the detour had to wait in the Merriman queue anyway---which is why the two lines in fig. 11 follow a similar trajectory for very low $d$ before diverging.
+
+Ironically, however, taking the Du Toit street bypass lowers congestion on the R44 itself and shortens the queue to enter from Merriman Avenue, increasing average speeds and making journeys faster for everyone else (except those who wanted to enter from Alexander street originally). These faster journey times can be seen in fig. 11, and on the graph of average speeds shown in fig. 13.
+
+\begin{figure}
+\textbf{\large Average TOR as a function of $d$}\par\medskip
+\rotatebox{90}{{\hspace*{3cm}{\large TOR}}}
+\includegraphics[scale = 0.55, left]{./data/phase4/TORs_vs_d.png}
+\vspace*{0.1cm}\hspace*{4.5cm}{\large $d$}
+\caption{\label{fig} TOR from Merriman to the R310 as a function of $d$. Blue represents vehicles that stick to the R44, and orange those that use the Du Toit street bypass}
+\end{figure}
+
+\begin{figure}
+\textbf{\large Average queue length as a function of $d$}\par\medskip
+\rotatebox{90}{{\hspace*{3cm}{\large Queue length (vehicles)}}}
+\includegraphics[scale = 0.55, left]{./data/phase4/queues_vs_d.png}
+\vspace*{0.1cm}\hspace*{4.5cm}{\large $d$}
+\caption{\label{fig} Average queue lengths waiting to enter the R44 as a funtion of $d$. Blue represents Merriman, orange George Blake, and green Alexander street}
+\end{figure}
+
+\begin{figure}
+\textbf{\large Average speed on the R44 as a function of $d$}\par\medskip
+\rotatebox{90}{{\hspace*{3cm}{\large $\langle v \rangle$}}}
+\includegraphics[scale = 0.55, left]{./data/phase4/queues_vs_d.png}
+\vspace*{0.1cm}\hspace*{4.5cm}{\large $d$}
+\caption{\label{fig} Average queue lengths waiting to enter the R44 as a funtion of $d$. Blue represents Merriman, orange George Blake, and green Alexander street}
+\end{figure}
+
 \section*{Conclusion}
+
+The main finding was that using the Du Toit street bypass is not an effective way to decrease journey times between Merriman Avenue and the R44, and in fact makes the situation significantly worse in most situations. Possible limitations on this finding include the fact that variablity in how long traffic lights are red/green, traffic conditions chnaging at different times of the day or year, potential variability in the value of $p$, and the presence of trucks and other large vehicles with lower acceleration that effectively occupy multiple "cells".
+
+A secondary finding was that traffic lights change more often than the model would suggest is optimal, which points to the most important caveat: people making their way home after a long day's work are impatient, and they would rather have a sense of constantly moving forward than long waits that technically minimise their total travel time, and will often make irrational decisions simply because it gives them something to do rather than simply waiting for traffic to move.
 
 \section*{References}
 
