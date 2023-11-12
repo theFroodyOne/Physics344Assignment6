@@ -12,9 +12,9 @@
 
 \section*{Introduction}
 
-The aim of this project was to adapt and expand the model proposed in (Nagel \& Schrekenberg, 1992) to model traffic flow (specifically, southbound traffic during evening peak hours) on and around the R44 between Merriman avenue and the Y-junction with the R310. Data from Google Maps as well as the author's personal experience shows that this is one of the most congested road segments in Stellenbosch (fig. 1). This model could then be used to evaluate a strategy employed by some road users in an attempt to circumvent this traffic (the Du Toit street bypass), as well as considering infrastructure changes that could ameliorate the situation.
+The aim of this project was to adapt and expand the model proposed in (Nagel \& Schrekenberg, 1992) to model traffic flow (specifically, southbound traffic during evening peak hours) on and around the R44 between Merriman avenue and the Y-junction with the R310. Data from Google Maps as well as the author's personal experience shows that this is one of the most congested road segments in Stellenbosch (fig. 1). This model could then be used to evaluate a strategy employed by some road users in an attempt to circumvent this traffic (the Du Toit Street bypass), as well as considering infrastructure changes that could ameliorate the situation.
 
-This project proceeded in multiple phases. At first, the original Nagel-Schreckenberg model was only slightly adjusted to model a linear road segment. Phase 2 involved the addition of junctions along this road segment, while phase 3 considered the effects of traffic lights. In phase 4, the strategy of using Du Toit street to bypass traffic was evaluated.
+This project proceeded in multiple phases. At first, the original Nagel-Schreckenberg model was only slightly adjusted to model a linear road segment. Phase 2 involved the addition of junctions along this road segment, while phase 3 considered the effects of traffic lights. In phase 4, the strategy of using Du Toit Street to bypass traffic was evaluated.
 
 All the code, data and resources used in this project are available on GitHub at: https://github.com/theFroodyOne/Physics344Assignment6
 
@@ -175,7 +175,7 @@ Average queue lengths did not differ much for different $p$, so fig. 10 is repre
 
 \begin{figure}
 \textbf{\large Average queue lengths of $t$ at $p=0.3$}\par\medskip
-\rotatebox{90}{{\hspace*{3cm}{\large $\langle v \rangle$}}}
+\rotatebox{90}{{\hspace*{3cm}{\large Queue length (vehicles)}}}
 \includegraphics[scale = 0.55, left]{./data/phase3/queue_lengths_vs_t_p=0.3.png}
 \vspace*{0.1cm}\hspace*{4.5cm}{\large $t$}
 \caption{\label{fig} Average queue lengths as a function of $t$. Blue represents Merriman, orange George Blake, and green Alexander Street}
@@ -187,34 +187,34 @@ It is interesting to note that 1. for some $t$, average speeds were significantl
 
 Explaining the second phenomenon is a bit more tricky, however. It is clear that the waves increase in intensity and period as $t$ increases (except possibly at higher $p$---the data is a bit too noisy there to be certain), but this does not point to any particular cause. One possible explanation is a kind of "harmonic" effect, where $\langle v \rangle$ is higher at values near particular multiples of the peak $t$. Another possibility is that these values of $t$ allow vehicles with a particular (and probable) initial speed to move all the way through this road segment with no stopping whereas nearby values of $t$ do not. Ultimately, while interesting, this phenomenon falls outside the scope of this study and was not investigated extensively.
 
-\section*{Phase 4: Parallel traffic flow in Du Toit street}
+\section*{Phase 4: Parallel traffic flow in Du Toit Street}
 
 \subsection*{The model}
 
-Conceptually, phase 4 is another fairly minor evolution of its predecessor. Vehicles on Merriman waiting to enter the R44 can make their way down Du Toit street instead and bypass a lot of traffic by joining the R44 at Alexander Street. This adds a third variable to the equation, $d$, the probability that a vehicle waiting on Merriman Avenue takes this detour. To assess this strategy, two factors will be considered: whether the vehicles taking the detour indeed reach their destination faster, and any effect taking the detour may have on overall flow of traffic.
+Conceptually, phase 4 is another fairly minor evolution of its predecessor. Vehicles on Merriman waiting to enter the R44 can make their way down Du Toit Street instead and bypass a lot of traffic by joining the R44 at Alexander Street. This adds a third variable to the equation, $d$, the probability that a vehicle waiting on Merriman Avenue takes this detour. To assess this strategy, two factors will be considered: whether the vehicles taking the detour indeed reach their destination faster, and any effect taking the detour may have on overall flow of traffic.
 
 It stands to reason that $p$ and $t$ should not change too much from one evening to the next, so, to simplify things, these were fixed to particular values for this phase. The data collected for Alexander Street also included timings on traffic lights, which averaged around 30-40 seconds between every state change, depending on traffic conditions. This corresponds to $12 \leq t \leq 16$, noticeably lower than the values that produced the highest $\langle v \rangle$ in phase 3. The average value of $t=14$ was fixed for this phase. Given the findings in phase 2, $p$ was also fixed to 0.3.
 
 \subsection*{Implementation}
 
-This phase was implemented mainly in the \texttt{FinalModel} class, a subclass of \texttt{TrafficLightModel}, with the \texttt{DuToitModel} class (a subclass of \texttt{SimpleModel}) as a singleton to model Du Toit street specifically therein. The \texttt{step()} function of \texttt{FinalModel} was modified to allow vehicles in the Merriman queue to enter Du Toit street based on the detour probability $d$, and to join the Alexander queue when reaching the end of Du Toit street, as well as adding fields for tracking TOR from Merriman via both routes. The only change to \texttt{DuToitModel} compared to its superclass was vehicles slowing down when reaching the end of the road and waiting to be scooped up by the \texttt{FinalModel} that placed them in the Alexander Street queue.
+This phase was implemented mainly in the \texttt{FinalModel} class, a subclass of \texttt{TrafficLightModel}, with the \texttt{DuToitModel} class (a subclass of \texttt{SimpleModel}) as a singleton to model Du Toit Street specifically therein. The \texttt{step()} function of \texttt{FinalModel} was modified to allow vehicles in the Merriman queue to enter Du Toit Street based on the detour probability $d$, and to join the Alexander queue when reaching the end of Du Toit Street, as well as adding fields for tracking TOR from Merriman via both routes. The only change to \texttt{DuToitModel} compared to its superclass was vehicles slowing down when reaching the end of the road and waiting to be scooped up by the \texttt{FinalModel} that placed them in the Alexander Street queue.
 
-The \texttt{Vehicle} class was modified to track the origins of vehicles, since we are only really interested in vehicles from Merriman Avenue for this phase, as well as the route they followed (i.e. whether they went straight into the R44 or via Du Toit street) for comparison purposes.
+The \texttt{Vehicle} class was modified to track the origins of vehicles, since we are only really interested in vehicles from Merriman Avenue for this phase, as well as the route they followed (i.e. whether they went straight into the R44 or via Du Toit Street) for comparison purposes.
 
 \subsection*{Results}
 
-Somewhat surprisingly, taking the detour down Du Toit street was never significantly faster than going down the R44 (fig. 11). For very low $d$ Du Toit street was marginally faster, but by $d = 0.06$ the R44 was faster and the difference becomes quite stark very quickly at moderate to high $d$. Part of the reason for this may be seen in fig. 12. For $d < 0.14$, the Merriman queue is the longest and causes the most delay, so any transfers to the Alexander queue relieves this pressure and speeds things up. However, when $d \geq 0.14$, the Alexander queue is the longest, so trying to transfer to it from Merriman is counterproductive since you will spend longer waiting there.
+Somewhat surprisingly, taking the detour down Du Toit Street was never significantly faster than going down the R44 (fig. 11). For very low $d$ Du Toit Street was marginally faster, but by $d = 0.06$ the R44 was faster and the difference becomes quite stark very quickly at moderate to high $d$. Part of the reason for this may be seen in fig. 12. For $d < 0.14$, the Merriman queue is the longest and causes the most delay, so any transfers to the Alexander queue relieves this pressure and speeds things up. However, when $d \geq 0.14$, the Alexander queue is the longest, so trying to transfer to it from Merriman is counterproductive since you will spend longer waiting there.
 
-Furthermore, vehicles turn into Du Toit street from the head of the Merriman queue (in the simulation at least, in reality the two junctions are a few metres apart) which means that vehicles taking the detour had to wait in the Merriman queue anyway---which is why the two lines in fig. 11 follow a similar trajectory for very low $d$ before diverging.
+Furthermore, vehicles turn into Du Toit Street from the head of the Merriman queue (in the simulation at least, in reality the two junctions are a few metres apart) which means that vehicles taking the detour had to wait in the Merriman queue anyway---which is why the two lines in fig. 11 follow a similar trajectory for very low $d$ before diverging.
 
-Ironically, however, taking the Du Toit street bypass lowers congestion on the R44 itself and shortens the queue to enter from Merriman Avenue, increasing average speeds and making journeys faster for everyone else (except those who wanted to enter from Alexander Street originally). These faster journey times can be seen in fig. 11, and on the graph of average speeds shown in fig. 13.
+Ironically, however, taking the Du Toit Street bypass lowers congestion on the R44 itself and shortens the queue to enter from Merriman Avenue, increasing average speeds and making journeys faster for everyone else (except those who wanted to enter from Alexander Street originally). These faster journey times can be seen in fig. 11, and on the graph of average speeds shown in fig. 13.
 
 \begin{figure}
 \textbf{\large Average TOR as a function of $d$}\par\medskip
 \rotatebox{90}{{\hspace*{3cm}{\large TOR}}}
 \includegraphics[scale = 0.55, left]{./data/phase4/TORs_vs_d.png}
 \vspace*{0.1cm}\hspace*{4.5cm}{\large $d$}
-\caption{\label{fig} TOR from Merriman to the R310 as a function of $d$. Blue represents vehicles that stick to the R44, and orange those that use the Du Toit street bypass}
+\caption{\label{fig} TOR from Merriman to the R310 as a function of $d$. Blue represents vehicles that stick to the R44, and orange those that use the Du Toit Street bypass}
 \end{figure}
 
 \begin{figure}
@@ -235,7 +235,7 @@ Ironically, however, taking the Du Toit street bypass lowers congestion on the R
 
 \section*{Conclusion}
 
-The main finding was that using the Du Toit street bypass is not an effective way to decrease journey times between Merriman Avenue and the R310, and in fact is significantly slower in most situations. Possible limitations on this finding include variability in how long traffic lights are red/green, traffic conditions changing at different times of the day or year, potential variability in the value of $p$, and the presence of trucks and other large vehicles with lower acceleration that effectively occupy multiple "cells", all of which were not taken into account here. It is also possible that some of the assumptions made re. cell size, acceleration, etc. may simply not be realistic.
+The main finding was that using the Du Toit Street bypass is not an effective way to decrease journey times between Merriman Avenue and the R310, and in fact is significantly slower in most situations. Possible limitations on this finding include variability in how long traffic lights are red/green, traffic conditions changing at different times of the day or year, potential variability in the value of $p$, and the presence of trucks and other large vehicles with lower acceleration that effectively occupy multiple "cells", all of which were not taken into account here. It is also possible that some of the assumptions made re. cell size, acceleration, etc. may simply not be realistic.
 
 A secondary finding was that traffic lights change more often than the model would suggest is optimal, which points to the most important caveat: people making their way home after a long day's work are impatient, and they would rather have a sense of constantly moving forward than long waits that technically minimise their overall travel time. Furthermore, some drivers may make irrational decisions in situations such as these simply because it gives them something to do rather than simply waiting for a light to turn green.
 
