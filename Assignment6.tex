@@ -37,7 +37,7 @@ For phase 1, the model stuck closely to the original proposal in (Nagel \& Schre
 
 This model was implemented in Java (see src/main/java/SimpleModel.java) this creates a class that can be instantiated using the four independent variables in the model at this phase: $q$, $p$, $v$ and $l$. One instantiated, the simulation can be run for single time-step at a time (using \texttt{step()}) or for any number of time-steps (using \texttt{run(int numSteps)}, which returns the average number of time-steps a vehicle spent on the road in that run).
 
-To obtain some exploratory data, $1000$ simulations were run with values of $q \in \{0.1, \dots , 1\}$, $p \in \{0, \dots , 0.9\}$, $v \in \{3, 6, 9, 12\}$ and $l \in \{5, 10, 20, 40, 80\}$ for $10000$ time-steps, and TOR was recorded in (data/phase1/data.csv). This data was then analysed using numpy and matplotlib in dataAnalysis.ipynb. The coefficient of determination $r^{2}$ was calculated between every independent variable and TOR. For more detailed information, the coefficient of determination was also calculated for selected subsets of the data (e.g. only when $p$ is low).
+To obtain some exploratory data, $1000$ simulations were run with values of $q \in \{0.1, \dots , 1\}$, $p \in \{0, \dots , 0.9\}$, $v \in \{3, 6, 9, 12\}$ and $l \in \{5, 10, 20, 40, 80\}$ for $10000$ time-steps, and TOR was recorded in (data/phase1/data.csv). This data was then analysed using numpy and matplotlib in dataAnalysis.ipynb. The coefficient of determination $r^{2}$ was calculated between every independent variable and TOR. For more detailed information, the coefficient of determination was also calculated for selected subsets of the data (e.g. only when $p$ is low). Plots were produced to show the relationship between TOR and some of the independent variables.
 
 \subsection*{Results}
 
@@ -109,7 +109,7 @@ Finally, using TOR as a metric in this phase would be complicated by the fact th
 
 This model was implemented in the \texttt{JunctionModel} class, which is a subclass of \texttt{SimpleModel} used for phase 1. Fields were added for the inflow and outflow probabilities as indicated in the table above, with $v$ and $l$ now fixed to correspond to their real-world values. Furthermore, the \texttt{step()} function had to be updated to mark vehicles that will leave the road at the next junction (which necessitated a \texttt{destination} field to be added to the \texttt{Vehicle} class) and to remove these when they reached the junction in question. \texttt{run(int numSteps)} was also updated to record average speeds instead of TOR.
 
-1000 simulations were run for 1440 time-steps each (corresponding to 1 hour in real-world time) for each $p \in \{0, 0.01, \dots , 0.99\}$ and the average speed recorded in data/phase2/data.csv.
+1000 simulations were run for 1440 time-steps each (corresponding to 1 hour in real-world time) for each $p \in \{0, 0.01, \dots , 0.99\}$ and the average speed recorded in data/phase2/data.csv. This data was then used in dataAnalysis.ipynb to create a plot of $\langle v \rangle$ as a function of $p$.
 
 \subsection*{Results}
 
@@ -137,7 +137,7 @@ In this phase, the model was improved by the addition of traffic lights regulati
 
 This phase of the model was implemented in the \texttt{TrafficLightModel} class, a subclass of \texttt{JunctionModel}. Incoming vehicles from junctions were added to queues (specifically, the in-built \texttt{ArrayBlockingQueue<Vehicle>}), waiting for the light to turn green to allow them onto the R44. The \texttt{step()} function was updated to include slowing down for the traffic lights, and the lights themselves were encapsulated in the \texttt{TrafficLight} class, which included the functions \texttt{check()} to determine if the light is red or green, \texttt{incrementTime()} to move the traffic light along one time-step, and \texttt{change()} to change the traffic light from red to blue and vice versa.
 
-Average speeds on the R44 itself and average lengths of all queues over 1000 runs were recorded in data/phase2/data.csv for $t \in \{1, 2, \dots , 120\}$ and $p \in \{0.05, 0.1, \dots , 0.65\}$.
+Average speeds on the R44 itself and average lengths of all queues over 1000 runs were recorded in data/phase2/data.csv for $t \in \{1, 2, \dots , 120\}$ and $p \in \{0.05, 0.1, \dots , 0.65\}$. This data was used in dataAnalysis.ipynb to produce plots of $\langle v \rangle$ and queue length as a function of $t$ for each value of $p$.
 
 \subsection*{Results}
 
@@ -195,13 +195,13 @@ Explaining the second phenomenon is a bit more tricky, however. It is clear that
 
 \subsection*{The model}
 
-Conceptually, phase 4 is another fairly minor evolution of its predecessor. Vehicles on Merriman waiting to enter the R44 can make their way down Du Toit street instead and skip a lot of traffic by joining the R44 at Alexander Street. This adds a third variable to the equation, $d$, the probability that a vehicle waiting on Merriman Avenue takes this detour. To assess this strategy, two factors will be considered: whether the vehicles taking the detour indeed reach their destination faster, and any effect taking the detour may have on overall flow of traffic.
+Conceptually, phase 4 is another fairly minor evolution of its predecessor. Vehicles on Merriman waiting to enter the R44 can make their way down Du Toit street instead and bypass a lot of traffic by joining the R44 at Alexander Street. This adds a third variable to the equation, $d$, the probability that a vehicle waiting on Merriman Avenue takes this detour. To assess this strategy, two factors will be considered: whether the vehicles taking the detour indeed reach their destination faster, and any effect taking the detour may have on overall flow of traffic.
 
 It stands to reason that $p$ and $t$ should not change too much from one evening to the next, so, to simplify things, these were fixed to particular values for this phase. The data collected for Alexander Street also included timings on traffic lights, which averaged around 30-40 seconds between every state change, depending on traffic conditions. This corresponds to $12 \leq t \leq 16$, noticeably lower than the values that produced the highest $\langle v \rangle$ in phase 3. The average value of $t=14$ was fixed for this phase. Given the findings in phase 2, $p$ was also fixed to 0.3.
 
 \subsection*{Implementation}
 
-This phase was implemented mainly in the \texttt{FinalModel} class, a subclass of \texttt{TrafficLightModel}, with the \texttt{DuToitModel} class (a subclass of \texttt{SimpleModel}) as a singleton to model Du Toit street specifically therein. The \texttt{step()} function of \texttt{FinalModel} was modified to allow vehicles in the Merriman queue to enter Du Toit street based on the detour probability $d$, and to join the Alexander queue when reaching the end of Du Toit street, as well as adding fields for tracking TOR from Merriman via both routes. The only change to \texttt{DuToitModel} compared to its superclass was vehicles slowing down when reaching the end of the road and waiting to be scooped up by the \texttt{FinalModel} that would place them in the Alexander Street queue.
+This phase was implemented mainly in the \texttt{FinalModel} class, a subclass of \texttt{TrafficLightModel}, with the \texttt{DuToitModel} class (a subclass of \texttt{SimpleModel}) as a singleton to model Du Toit street specifically therein. The \texttt{step()} function of \texttt{FinalModel} was modified to allow vehicles in the Merriman queue to enter Du Toit street based on the detour probability $d$, and to join the Alexander queue when reaching the end of Du Toit street, as well as adding fields for tracking TOR from Merriman via both routes. The only change to \texttt{DuToitModel} compared to its superclass was vehicles slowing down when reaching the end of the road and waiting to be scooped up by the \texttt{FinalModel} that placed them in the Alexander Street queue.
 
 The \texttt{Vehicle} class was modified to track the origins of vehicles, since we are only really interested in vehicles from Merriman Avenue for this phase, as well as the route they followed (i.e. whether they went straight into the R44 or via Du Toit street) for comparison purposes.
 
@@ -239,9 +239,9 @@ Ironically, however, taking the Du Toit street bypass lowers congestion on the R
 
 \section*{Conclusion}
 
-The main finding was that using the Du Toit street bypass is not an effective way to decrease journey times between Merriman Avenue and the R44, and in fact makes the situation significantly worse in most situations. Possible limitations on this finding include the fact that variability in how long traffic lights are red/green, traffic conditions changing at different times of the day or year, potential variability in the value of $p$, and the presence of trucks and other large vehicles with lower acceleration that effectively occupy multiple "cells". It is also possible that some of the assumptions made re. cell size, acceleration, etc. may simply not be realistic.
+The main finding was that using the Du Toit street bypass is not an effective way to decrease journey times between Merriman Avenue and the R310, and in fact is significantly slower in most situations. Possible limitations on this finding include variability in how long traffic lights are red/green, traffic conditions changing at different times of the day or year, potential variability in the value of $p$, and the presence of trucks and other large vehicles with lower acceleration that effectively occupy multiple "cells", all of which were not taken into account here. It is also possible that some of the assumptions made re. cell size, acceleration, etc. may simply not be realistic.
 
-A secondary finding was that traffic lights change more often than the model would suggest is optimal, which points to the most important caveat: people making their way home after a long day's work are impatient, and they would rather have a sense of constantly moving forward than long waits that technically minimise their total travel time, and will often make irrational decisions simply because it gives them something to do rather than simply waiting for traffic to move.
+A secondary finding was that traffic lights change more often than the model would suggest is optimal, which points to the most important caveat: people making their way home after a long day's work are impatient, and they would rather have a sense of constantly moving forward than long waits that technically minimise their overall travel time. Furthermore, some drivers may make irrational decisions in situations such as these simply because it gives them something to do rather than simply waiting for a light to turn green.
 
 \pagebreak
 
